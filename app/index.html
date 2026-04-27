@@ -1,0 +1,1396 @@
+﻿<html>
+<head>
+  <title>Mechanical and Plumbing Calculator</title>
+  
+  
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/modules/home.css" />
+  <link rel="stylesheet" href="css/modules/storm.css" />
+  <link rel="stylesheet" href="css/modules/condensate.css" />
+  <link rel="stylesheet" href="css/modules/vent.css" />
+  <link rel="stylesheet" href="css/modules/ventilation.css" />
+  <link rel="stylesheet" href="css/modules/gas.css" />
+  <link rel="stylesheet" href="css/modules/wsfu.css" />
+  <link rel="stylesheet" href="css/modules/fixture-unit.css" />
+  <link rel="stylesheet" href="css/modules/solar.css" />
+  <link rel="stylesheet" href="css/modules/duct.css" />
+  <link rel="stylesheet" href="css/modules/duct-static.css" />
+  <link rel="stylesheet" href="css/modules/refrigerant.css" />
+</head>
+<body onload="initPage();">
+  <div class="wrap">
+    <div class="app-header">
+      <h1>Mechanical and Plumbing Calculator</h1>
+      <div class="brand">
+        <img class="brand-logo" src="Company Icone.jpg" alt="120 DEGREEZ Logo" />
+        <div class="brand-text">
+          <span class="brand-name">120 DEGREEZ</span>
+          <span class="brand-subtitle">MEP ENGINEERING</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-nav">
+      <button id="navHome" class="nav-btn active" onclick="openModule('home');">Home</button>
+      <button id="navStorm" class="nav-btn" onclick="openModule('storm');">Storm Drain</button>
+      <button id="navCondensate" class="nav-btn" onclick="openModule('condensate');">Condensate</button>
+      <button id="navVent" class="nav-btn" onclick="openModule('vent');">Sanitary Drainage</button>
+      <button id="navVentilation" class="nav-btn" onclick="openModule('ventilation');">Ventilation</button>
+      <button id="navGas" class="nav-btn" onclick="openModule('gas');">Gas Pipe</button>
+      <button id="navDuct" class="nav-btn" onclick="openModule('duct');">Duct</button>
+      <button id="navDuctStatic" class="nav-btn" onclick="openModule('ductStatic');">Duct Static</button>
+      <button id="navWsfu" class="nav-btn" onclick="openModule('wsfu');">WSFU</button>
+      <button id="navFixtureUnit" class="nav-btn" onclick="openModule('fixtureUnit');">Fixture Unit</button>
+      <button id="navSolar" class="nav-btn" onclick="openModule('solar');">Solar</button>
+      <button id="navRefrigerant" class="nav-btn" onclick="openModule('refrigerant');">Refrigerant</button>
+    </div>
+    <div class="global-actions">
+      <input type="button" class="btn btn-toolbar" value="LOAD PROJECT" onclick="loadProjectFromFile();" />
+      <input type="button" class="btn btn-toolbar" value="SAVE PROJECT" onclick="saveProjectToFile();" />
+      <input type="button" class="btn btn-toolbar" value="EXPORT TO EXCEL" onclick="exportSectionToExcel();" />
+    </div>
+
+    <div id="homeScreen" class="module-screen active">
+      <div class="card project-context-card">
+        <div class="project-context-header">
+          <div class="module-title">Current Project</div>
+          <div class="project-context-version" id="projectContextVersion"></div>
+        </div>
+        <div id="projectContextBody" class="project-context-body"></div>
+      </div>
+      <div class="card">
+        <div class="home-heading-block">
+          <div class="module-title">Choose Calculator</div>
+          <div class="module-note">Each calculator operates in a dedicated workspace to ensure a clear and focused workflow.</div>
+        </div>
+        <div class="home-grid">
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Storm Drain calculator" onclick="openModule('storm');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('storm');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Storm Drain</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Code-based roof drainage sizing using area, rainfall lookup, and horizontal/vertical capacity checks.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-storm">
+                <img class="home-card-illustration" src="home_icon_storm_drain.png" alt="Storm Drain illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Condensate Drain calculator" onclick="openModule('condensate');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('condensate');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Condensate Drain</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Zone-based condensate sizing with equipment breakdown, tonnage totals, and minimum pipe recommendations.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-cond">
+                <img class="home-card-illustration" src="home_icon_condensate_drain.png" alt="Condensate Drain illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Sanitary Drainage calculator" onclick="openModule('vent');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('vent');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Sanitary Drainage</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Fixture-based sanitary drainage DFU workflow with orientation checks and Table 703.2 pipe sizing.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-sanitary">
+                <img class="home-card-illustration" src="home_icon_sanitary_drainage.png" alt="Sanitary Drainage illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Gas Pipe Selection calculator" onclick="openModule('gas');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('gas');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Gas Pipe Selection</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Main gas line sizing from IPC/CPC tables using demand, inlet pressure, and governing run length.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-gas">
+                <img class="home-card-illustration" src="home_icon_gas_pipeline.png" alt="Gas Pipe Selection illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Ventilation Calculator" onclick="openModule('ventilation');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('ventilation');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Ventilation Calculator</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Outdoor air ventilation sizing per CMC Chapter 4 with Table 402.1 categories, Ez selection, and multi-zone system totals.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-ventilation">
+                <img class="home-card-illustration" src="Ventilation.png" alt="Ventilation Calculator illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Water Fixture Unit calculator" onclick="openModule('wsfu');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('wsfu');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Water Fixture Unit (WSFU)</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Domestic water sizing from fixture-unit demand with multi-pipe friction comparisons and selected service size.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-wsfu">
+                <img class="home-card-illustration" src="home_icon_water_fixture_unit.png" alt="Water Fixture Unit illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Duct Sizer calculator" onclick="openModule('duct');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('duct');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Duct Sizer</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Live duct sizing and geometry checks for round/rectangular systems using airflow, friction, and velocity criteria.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-duct">
+                <img class="home-card-illustration" src="home_icon_duct_sizer.png" alt="Duct Sizer illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Fixture Unit Calculator" onclick="openModule('fixtureUnit');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('fixtureUnit');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Fixture Unit Calculator</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Enter fixtures once and generate coordinated sanitary drainage and water supply fixture load results.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-fixtureunit">
+                <img class="home-card-illustration" src="home_icon_water_fixture_unit.png" alt="Fixture Unit Calculator illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Duct Static Pressure calculator" onclick="openModule('ductStatic');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('ductStatic');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Duct Static Pressure</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Segment worksheet for static pressure drop with straight/elbow logic and total system pressure summary.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-ductstatic">
+                <img class="home-card-illustration" src="home_icon_duct_static_pressure.png" alt="Duct Static Pressure illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Solar Calculation calculator" onclick="openModule('solar');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('solar');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Solar Calculation</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Solar PV and storage sizing workflow with climate inputs, compliance path checks, and structured engineering outputs.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-solar">
+                <img class="home-card-illustration" src="home_icon_solar_calculation.png" alt="Solar Calculation illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Refrigerant Compliance calculator" onclick="openModule('refrigerant');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('refrigerant');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Refrigerant Compliance</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Unified ASHRAE 15/15.2 A2L compliance workflow for classification, charge calculations, and pass/fail review.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-refrigerant">
+                <img class="home-card-illustration" src="Refrigerant Pipe.png" alt="Refrigerant Compliance illustration" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="home-logo-block">
+          <img src="mep-120-degreez.png" alt="120 Degreez MEP Engineering Logo" />
+        </div>
+        <div class="home-footer-row">
+          <div class="home-version-label" id="homeVersionLabel"></div>
+          <div class="home-footer-credit">Designed by: Borhan Torkfar</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="projectFormModal" class="project-modal-overlay" style="display:none;">
+      <div class="project-modal-card">
+        <div class="project-modal-header">
+          <div class="module-title" id="projectFormTitle">Project Information</div>
+        </div>
+        <div class="project-form-grid">
+          <div class="project-form-section-title">Basic Info</div>
+          <div class="row"><div class="label">Project Name *</div><div class="field"><input type="text" id="projectNameInput" /></div></div>
+          <div class="row"><div class="label">Project Number *</div><div class="field"><input type="text" id="projectNumberInput" /></div></div>
+          <div class="row"><div class="label">Client Name *</div><div class="field"><input type="text" id="projectClientInput" /></div></div>
+          <div class="row"><div class="label">Project Location *</div><div class="field"><input type="text" id="projectLocationInput" /></div></div>
+
+          <div class="project-form-section-title">Additional Info</div>
+          <div class="row"><div class="label">Engineer Name</div><div class="field"><input type="text" id="projectEngineerInput" /></div></div>
+          <div class="row"><div class="label">Company Name</div><div class="field"><input type="text" id="projectCompanyInput" /></div></div>
+          <div class="row"><div class="label">Date</div><div class="field"><input type="date" id="projectDateInput" /></div></div>
+          <div class="row"><div class="label">Revision</div><div class="field"><input type="text" id="projectRevisionInput" /></div></div>
+
+          <div class="project-form-section-title">Notes</div>
+          <div class="row"><div class="label">Remarks</div><div class="field"><textarea id="projectNotesInput" rows="3"></textarea></div></div>
+        </div>
+        <div id="projectFormError" class="warning-line project-form-error" style="display:none;"></div>
+        <div class="project-modal-actions">
+          <input type="button" class="btn btn-reset" value="CANCEL" onclick="closeProjectForm();" />
+          <input type="button" class="btn btn-secondary" value="SAVE PROJECT INFO" onclick="saveProjectFromForm();" />
+        </div>
+      </div>
+    </div>
+
+    <div id="projectDetailsModal" class="project-modal-overlay" style="display:none;">
+      <div class="project-modal-card">
+        <div class="project-modal-header">
+          <div class="module-title">Project Details</div>
+        </div>
+        <div id="projectDetailsBody" class="project-details-body"></div>
+        <div class="project-modal-actions">
+          <input type="button" class="btn btn-toolbar" value="SET AS ACTIVE" onclick="setProjectAsActiveFromDetails();" />
+          <input type="button" class="btn btn-reset" value="CLOSE" onclick="closeProjectDetails();" />
+          <input type="button" class="btn btn-secondary" value="EDIT" onclick="editProjectFromDetails();" />
+        </div>
+      </div>
+    </div>
+
+    <div id="stormScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Storm Drain Pipe Sizing Calculator</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="grid">
+      <div class="left">
+        <div class="card" id="leftRow1">
+          <div class="storm-section-title">Area Inputs</div>
+          <div id="areasContainer"></div>
+          <div style="text-align:right;">
+            <input type="button" class="btn storm-secondary-btn" value="+ ADD AREA" onclick="addArea();" />
+          </div>
+        </div>
+
+        <div class="card" id="leftRow2">
+          <div class="storm-group">
+            <div class="storm-group-title">Design Criteria</div>
+          <div class="row">
+            <div class="label">Code Basis</div>
+            <div class="field">
+              <select id="codeBasis" onchange="updateSlopeOptions(); recalculate();">
+                <option value="CPC" selected="selected">California Plumbing Code (CPC) 2025</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="label">Horizontal Drain Slope</div>
+            <div class="field">
+              <select id="slope" onchange="recalculate();"></select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Drain Type</div>
+            <div class="field">
+              <select id="drainType" onchange="recalculate();">
+                <option value="PRIMARY" selected="selected">Primary Roof Drain System</option>
+                <option value="PRIMARY_SECONDARY">Primary + Secondary (Emergency Overflow) System</option>
+                <option value="COMBINED">Combined Storm System</option>
+              </select>
+            </div>
+          </div>
+          </div>
+
+          <div class="storm-group">
+            <div class="storm-group-title">Rainfall Data</div>
+          <div class="row">
+            <div class="label">ZIP Code (5-digit)</div>
+            <div class="field">
+              <div class="zip-lookup-wrap">
+                <div class="zip-input-wrap">
+                  <input type="text" id="zipCode" placeholder="Enter 5-digit ZIP code" maxlength="10" />
+                </div>
+                <div class="zip-action-wrap">
+                  <input type="button" class="btn btn-zip storm-secondary-btn" value="FIND RAINFALL" onclick="lookupRainfallByZip();" />
+                </div>
+              </div>
+              <div id="zipLookupStatus" class="lookup-status"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="label">Rainfall Rate (in/hr)</div>
+            <div class="field">
+              <input type="number" step="0.01" id="rainfallRate" value="1" oninput="recalculate();" onchange="recalculate();" />
+              <div class="input-note">Manual rainfall entry supports values like 1.5, 1.8, or any other custom rate.</div>
+            </div>
+          </div>
+          </div>
+
+          <div class="storm-group">
+            <div class="storm-group-title">Project Preview</div>
+            <div class="storm-preview-strip" id="stormPreview">
+              <div class="storm-preview-item"><span class="storm-preview-label">Total Area</span><span class="storm-preview-value" id="stormPreviewArea">0 sq ft</span></div>
+              <div class="storm-preview-item"><span class="storm-preview-label">Runoff</span><span class="storm-preview-value" id="stormPreviewRunoff">0.00 GPM</span></div>
+              <div class="storm-preview-item"><span class="storm-preview-label">Areas</span><span class="storm-preview-value" id="stormPreviewCount">1</span></div>
+              <div class="storm-preview-status ok" id="stormPreviewStatus">Live preview updates as you edit inputs. Click CALCULATE to commit to Results.</div>
+            </div>
+            <div id="validationSummary" class="validation-summary"></div>
+          </div>
+
+          <div class="storm-actions">
+            <input type="button" class="btn btn-reset storm-utility-btn" value="RESET" onclick="resetStormSection();" />
+            <input type="button" class="btn btn-secondary storm-primary-btn" value="CALCULATE" onclick="recalculate(true);" />
+          </div>
+          <div class="source-note">
+            IPC data is based on the Table 1106.2 image you sent. CPC horizontal data is based on the California table you sent first, and CPC vertical data is based on the Table 1103.1 image you just sent.
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <h2 class="storm-results-title">Results</h2>
+
+        <div class="result-group" id="rightRow1">
+          <div class="result-card storm-result-card">
+            <div class="result-title result-title-wrap">
+              <img class="title-icon" alt="Selected Basis Icon" src="338106.png" onerror="this.onerror=null; this.src='4003667.png';" />
+              <span class="title-text">Selected Basis</span>
+            </div>
+            <div class="result-line" id="selectedCodeText"></div>
+            <div class="result-line" id="drainTypeDisplay"></div>
+            <div class="result-line" id="rainfallDisplay"></div>
+            <div class="result-placeholder" id="selectedBasisHint">Code basis, drain type, and rainfall details appear here after calculation.</div>
+            <span id="totalAreaResult" style="display:none;"></span>
+          </div>
+
+          <div class="result-card storm-result-card">
+            <div class="result-title result-title-wrap">
+              <img class="title-icon" alt="Runoff Icon" src="runoff-icon.png" onerror="this.onerror=null; this.src='338106.png';" />
+              <span class="title-text">Runoff</span>
+            </div>
+            <div class="result-line" id="gpmText"></div>
+            <div class="result-line" id="cfsText"></div>
+            <div class="result-placeholder" id="runoffHint">Runoff values are shown here in GPM and CFS once you calculate.</div>
+          </div>
+        </div>
+
+        <div class="result-group" id="rightRow2">
+          <div class="result-card storm-result-card">
+            <div class="result-title result-title-wrap">
+              <img class="title-icon" alt="Per-Area Results Icon" src="piping.jpg" onerror="this.onerror=null; this.src='338106.png';" />
+              <span class="title-text">Per-Area Results</span>
+            </div>
+            <div id="perAreaResultsList"></div>
+            <div class="result-placeholder" id="perAreaHint">Area-by-area sizing details and pipe recommendations appear here after calculation.</div>
+            <div class="muted" id="basisNote"></div>
+          </div>
+        </div>
+        <div class="results-signature">Designed by: Borhan Torkfar</div>
+      </div>
+    </div>
+    </div>
+
+    <div id="condensateScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Condensate Drain Sizing</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="card">
+        <input type="hidden" id="condSizingMode" value="PER_UNIT_QTY" />
+        <div class="manager-box cond-zones-shell">
+          <div class="manager-title cond-zones-title">Condensate Zones</div>
+          <div id="condZonesContainer"></div>
+          <div class="cond-zones-footer">
+            <input type="button" class="btn cond-secondary-btn" value="+ ADD ZONE" onclick="addCondensateZone({ name: 'Zone ' + (condensateZones.length + 1), equipmentRows: [{ equipment: 'AHU', tonsPerUnit: 0, quantity: 1 }] });" />
+          </div>
+        </div>
+        <div class="module-note cond-preview-note" id="condPreview">Preview updates as you edit inputs. Click CALCULATE to commit to Results.</div>
+        <div class="cond-main-actions">
+          <input type="button" class="btn btn-reset" value="RESET" onclick="resetCondensateSection();" />
+          <input type="button" class="btn btn-secondary cond-primary-btn" value="CALCULATE" onclick="calculateCondensate();" />
+        </div>
+      </div>
+      <div class="result-card cond-results-card">
+        <div class="result-title">Results</div>
+        <div id="condResults" class="subtle"><span class="cond-results-placeholder">Condensate flow and pipe sizing results will appear here after calculation.</span></div>
+      </div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+
+    <div id="ventScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Sanitary Drainage</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="card">
+        <div class="vent-group">
+          <div class="vent-section-title">Design Basis</div>
+          <div class="row">
+            <div class="label">Code Basis</div>
+            <div class="field">
+              <select id="ventCodeBasis" onchange="updateVentTotalsAndUI();">
+                <option value="IPC" selected="selected">International Plumbing Code (IPC)</option>
+                <option value="CPC">California Plumbing Code (CPC)</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Usage Type</div>
+            <div class="field">
+              <select id="ventUsageType" onchange="updateVentTotalsAndUI();">
+                <option value="PRIVATE" selected="selected">Private</option>
+                <option value="PUBLIC">Public</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Drainage Orientation</div>
+            <div class="field">
+              <select id="ventDrainageOrientation" onchange="updateVentTotalsAndUI();">
+                <option value="HORIZONTAL" selected="selected">Drainage Horizontal</option>
+                <option value="VERTICAL">Drainage Vertical</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="manager-box vent-group">
+          <div class="manager-title">Sanitary Drainage Zones</div>
+          <div id="ventFixtureRows"></div>
+          <div style="text-align:right; margin-top:6px;">
+            <input type="button" class="btn cond-secondary-btn" value="+ ADD ZONE" onclick="addSanitaryZone();" />
+          </div>
+        </div>
+        <div class="vent-group">
+          <div class="vent-section-title">DFU Summary</div>
+          <div class="vent-summary-grid">
+            <div class="vent-summary-item">
+              <span class="vent-summary-label">Auto Total DFU</span>
+              <input type="number" id="ventAutoTotalDfu" step="0.001" value="0" readonly="readonly" />
+            </div>
+            <div class="vent-summary-item">
+              <span class="vent-summary-label">Manual Override</span>
+              <input type="checkbox" id="ventUseManualTotal" style="width:auto; height:auto; margin-top:8px;" onchange="updateVentTotalsAndUI();" />
+            </div>
+            <div class="vent-summary-item">
+              <span class="vent-summary-label">Manual Total DFU</span>
+              <input type="number" id="ventManualTotalDfu" step="0.001" value="0" oninput="updateVentTotalsAndUI();" />
+            </div>
+            <div class="vent-summary-item effective">
+              <span class="vent-summary-label">Effective Total DFU</span>
+              <input type="number" id="ventTotalDfu" step="0.001" value="0" readonly="readonly" />
+            </div>
+          </div>
+        </div>
+        <div class="module-note" id="ventPreview">Preview updates as you edit inputs. Click CALCULATE to commit to Results.</div>
+        <div style="text-align:right;">
+          <input type="button" class="btn btn-reset" value="RESET" onclick="resetVentSection();" />
+          <input type="button" class="btn btn-secondary" value="CALCULATE" onclick="calculateVent();" />
+        </div>
+      </div>
+      <div class="result-card vent-results-card">
+        <div class="result-title">Calculated Results</div>
+        <div id="ventResults" class="subtle">Enter fixture rows and press Calculate.</div>
+      </div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+
+    <div id="ventilationScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Outdoor Air Ventilation Calculator</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="grid ventilation-grid">
+        <div class="left">
+          <div class="card">
+            <div class="ventilation-section-title">System Inputs</div>
+            <div class="ventilation-input-grid">
+              <div class="ventilation-field">
+                <label for="ventCalcSystemType">System Type</label>
+                <select id="ventCalcSystemType" onchange="calculateVentilation(false);">
+                  <option value="SINGLE_ZONE">Single-zone system</option>
+                  <option value="ALL_OA">100% outdoor air system</option>
+                  <option value="MULTI_RECIRC">Multiple-zone recirculating system</option>
+                </select>
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcSystemPopulation">System Population Ps</label>
+                <input type="number" id="ventCalcSystemPopulation" min="0" step="0.01" value="0" oninput="calculateVentilation(false);" />
+              </div>
+            </div>
+            <div class="ventilation-divider"></div>
+            <div class="ventilation-section-title">Zone Inputs</div>
+            <div class="ventilation-input-grid">
+              <div class="ventilation-field">
+                <label for="ventCalcZoneName">Zone Name</label>
+                <input type="text" id="ventCalcZoneName" value="Zone 1" />
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcSpaceName">Space Name</label>
+                <input type="text" id="ventCalcSpaceName" placeholder="Space description" />
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcOccupancySearch">Occupancy Search</label>
+                <input type="text" id="ventCalcOccupancySearch" placeholder="Type to filter categories" oninput="filterVentilationOccupancyOptions(this.value);" />
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcOccupancy">Occupancy Category</label>
+                <select id="ventCalcOccupancy" onchange="onVentilationEntryCategoryChanged();"></select>
+              </div>
+              <div class="ventilation-field ventilation-field-span2">
+                <div class="ventilation-preset-row ventilation-preset-row-inline">
+                  <span class="ventilation-preset-label">Quick Presets</span>
+                  <input type="button" class="btn cond-secondary-btn" value="Office" onclick="applyVentilationPreset('office');" />
+                  <input type="button" class="btn cond-secondary-btn" value="Conference" onclick="applyVentilationPreset('conference');" />
+                  <input type="button" class="btn cond-secondary-btn" value="Classroom" onclick="applyVentilationPreset('classroom');" />
+                  <input type="button" class="btn cond-secondary-btn" value="Lobby" onclick="applyVentilationPreset('lobby');" />
+                  <input type="button" class="btn cond-secondary-btn" value="Corridor" onclick="applyVentilationPreset('corridor');" />
+                  <input type="button" class="btn cond-secondary-btn" value="Restaurant" onclick="applyVentilationPreset('restaurant');" />
+                  <input type="button" class="btn cond-secondary-btn" value="Retail" onclick="applyVentilationPreset('retail');" />
+                  <input type="button" class="btn cond-secondary-btn" value="Gym" onclick="applyVentilationPreset('gym');" />
+                </div>
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcPopulationMode">Population Mode</label>
+                <select id="ventCalcPopulationMode" onchange="onVentilationPopulationModeChanged();">
+                  <option value="DEFAULT">Use default density from table</option>
+                  <option value="MANUAL">Manual population</option>
+                </select>
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcArea">Floor Area Az (ft²)</label>
+                <input type="number" id="ventCalcArea" min="0" step="0.01" value="0" />
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcManualPopulation">Manual Population Pz</label>
+                <input type="number" id="ventCalcManualPopulation" min="0" step="0.01" value="0" />
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcPopulationDisplay">Calculated Population Pz</label>
+                <input type="number" id="ventCalcPopulationDisplay" step="0.01" value="0" readonly="readonly" />
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcDefaultDensity">Default Density (people/1000 ft²)</label>
+                <input type="number" id="ventCalcDefaultDensity" step="0.01" value="0" readonly="readonly" />
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcEzPreset">Air Distribution Effectiveness Ez</label>
+                <select id="ventCalcEzPreset" onchange="onVentilationEzPresetChanged();"></select>
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcEz">Ez Value</label>
+                <input type="number" id="ventCalcEz" min="0.1" step="0.01" value="0.8" />
+              </div>
+              <div class="ventilation-field">
+                <label for="ventCalcProvidedSupply">Provided Supply (CFM)</label>
+                <input type="number" id="ventCalcProvidedSupply" min="0" step="0.01" placeholder="Optional" />
+              </div>
+              <div class="ventilation-field ventilation-field-span2">
+                <label for="ventCalcZoneNotes">Zone Notes</label>
+                <input type="text" id="ventCalcZoneNotes" placeholder="Optional engineering notes" />
+              </div>
+            </div>
+            <div class="module-note ventilation-note">Default design basis uses Ez = 0.80 unless your selected distribution method requires otherwise.</div>
+            <div id="ventCalcEditingLabel" class="vent-editing-label" style="display:none;"></div>
+            <div class="ventilation-actions">
+              <input type="button" id="ventCalcCancelEditBtn" class="btn btn-reset vent-action-cancel" value="CANCEL EDIT" onclick="cancelVentilationEdit();" style="display:none;" />
+              <input type="button" class="btn btn-reset vent-action-reset" value="RESET" onclick="resetVentilationSection();" />
+              <input type="button" class="btn cond-secondary-btn vent-action-duplicate" value="DUPLICATE ZONE" onclick="duplicateVentilationZoneFromEditor();" />
+              <input type="button" id="ventCalcAddUpdateBtn" class="btn btn-secondary vent-action-add" value="+ ADD ZONE" onclick="addVentilationZoneFromInputs();" />
+              <input type="button" class="btn" value="CALCULATE" onclick="calculateVentilation(true);" />
+            </div>
+            <div class="validation-summary" id="ventCalcValidation"></div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="result-card">
+            <div class="result-title">Results</div>
+            <div id="ventilationResults" class="subtle">Select occupancy and enter zone data to calculate required outdoor air.</div>
+            <details class="ventilation-formula-details">
+              <summary>Calculation Details</summary>
+              <div id="ventilationCalculationDetails" class="subtle">Zone and system formula details will appear after calculation.</div>
+            </details>
+          </div>
+          <div class="ventilation-table-values-card ventilation-side-preview-card">
+            <div class="ventilation-card-group">
+              <div class="ventilation-table-values-head">
+                <span>Code Values</span>
+                <span class="ventilation-code-badge">CMC Table 402.1</span>
+              </div>
+              <div class="ventilation-table-values-grid">
+                <div><span class="k">Rp</span><span class="v" id="ventCalcRpValue">0.00 CFM/person</span></div>
+                <div><span class="k">Ra</span><span class="v" id="ventCalcRaValue">0.00 CFM/ft²</span></div>
+                <div><span class="k">Density</span><span class="v" id="ventCalcDensityValue">0.00 /1000 ft²</span></div>
+                <div><span class="k">Air Class</span><span class="v" id="ventCalcAirClassValue">-</span></div>
+              </div>
+            </div>
+            <div class="ventilation-card-group ventilation-card-group-preview">
+              <div class="ventilation-preview-head">Current Zone Preview</div>
+              <div class="ventilation-preview-grid">
+                <div><span class="k">Pz</span><span class="v" id="ventCalcPreviewPz">0.00</span></div>
+                <div><span class="k">Vbz</span><span class="v" id="ventCalcPreviewVbz">0.00 CFM</span></div>
+                <div><span class="k">Ez</span><span class="v" id="ventCalcPreviewEz">0.80</span></div>
+                <div><span class="k">Voz</span><span class="v" id="ventCalcPreviewVoz">0.00 CFM</span></div>
+                <div><span class="k">Provided Supply</span><span class="v" id="ventCalcPreviewSupply">Not provided</span></div>
+                <div><span class="k">Status</span><span class="v ventilation-status-pill status-none" id="ventCalcPreviewStatus">Not provided</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ventilation-running-totals" id="ventilationRunningTotals"></div>
+        <div class="manager-title">Zone Summary Table</div>
+        <div class="ventilation-table-wrap">
+          <table class="ventilation-table">
+            <thead>
+              <tr>
+                <th>Zone</th>
+                <th>Space</th>
+                <th>Occupancy</th>
+                <th class="num">Az (ft²)</th>
+                <th>Population Basis</th>
+                <th class="num">Pz</th>
+                <th class="num">Rp</th>
+                <th class="num">Ra</th>
+                <th class="num">Occ. Density</th>
+                <th class="num">Ez</th>
+                <th class="num">Vbz (CFM)</th>
+                <th class="num">Voz (CFM)</th>
+                <th class="num">Provided Supply (CFM)</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="ventilationZonesBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="module-note">Ventilation values are based on CMC Chapter 4 Table 402.1 and related equations. Verify jurisdictional and energy-code applicability before final design use.</div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+
+    <div id="gasScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Gas Pipe Selection</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="card">
+        <div class="gas-group">
+          <div class="gas-section-title">Design Parameters</div>
+          <div class="row">
+            <div class="label">Code Basis</div>
+            <div class="field">
+              <select id="gasCodeBasis" onchange="refreshGasCriteriaDropdowns(); calculateGasPipe(false);">
+                <option value="IPC" selected="selected">International Plumbing Code (IPC)</option>
+                <option value="CPC">California Plumbing Code (CPC)</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Pipe Material</div>
+            <div class="field">
+              <select id="gasMaterial" onchange="refreshGasCriteriaDropdowns(); calculateGasPipe(false);"></select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Inlet Pressure (psi)</div>
+            <div class="field"><select id="gasInletPressure" onchange="refreshGasCriteriaDropdowns(); calculateGasPipe(false);"></select></div>
+          </div>
+          <div class="row">
+            <div class="label">Pressure Drop</div>
+            <div class="field"><select id="gasPressureDrop" onchange="refreshGasCriteriaDropdowns(); calculateGasPipe(false);"></select></div>
+          </div>
+          <div class="row">
+            <div class="label">Demand Input Mode</div>
+            <div class="field">
+              <select id="gasDemandMode" onchange="calculateGasPipe(false);">
+                <option value="CFH" selected="selected">CFH</option>
+                <option value="BTUH">BTU/h</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="gas-group">
+          <div class="gas-section-title">Gas Properties</div>
+          <div class="row">
+            <div class="label">Gas Type</div>
+            <div class="field">
+              <select id="gasGasType" onchange="refreshGasCriteriaDropdowns(); calculateGasPipe(false);">
+                <option value="NATURAL_GAS" selected="selected">Natural Gas</option>
+                <option value="PROPANE">Propane</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Specific Gravity</div>
+            <div class="field"><select id="gasSpecificGravity" onchange="calculateGasPipe(false);"></select></div>
+          </div>
+          <div class="row">
+            <div class="label">Heating Value (BTU/CF)</div>
+            <div class="field"><input type="number" id="gasHeatingValue" step="0.01" value="0" oninput="calculateGasPipe(false);" onchange="calculateGasPipe(false);" /></div>
+          </div>
+        </div>
+        <div class="module-note" id="gasPreview">Preview updates as you edit inputs. Click CALCULATE to commit to Results.</div>
+        <div class="manager-box gas-lines-shell">
+          <div class="manager-title">Pipe Lines</div>
+          <div class="gas-lines-table-wrap">
+            <table class="gas-lines-table">
+              <colgroup><col class="col-line" /><col class="col-demand" /><col class="col-length" /><col class="col-action" /></colgroup>
+              <thead><tr><th>Line Label</th><th class="num">Demand Value</th><th class="num">Run Length</th><th></th></tr></thead>
+              <tbody id="gasLinesBody"></tbody>
+            </table>
+          </div>
+          <div style="text-align:right;">
+            <input type="button" class="btn cond-secondary-btn" value="+ ADD LINE" onclick="addGasLineRow();" />
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <input type="button" class="btn btn-reset" value="RESET" onclick="resetGasSection();" />
+          <input type="button" class="btn btn-secondary" value="CALCULATE" onclick="calculateGasPipe(true);" />
+        </div>
+      </div>
+      <div class="result-card gas-results-card">
+        <div class="result-title">Results</div>
+        <div id="gasResults" class="subtle">Enter gas inputs and press Calculate.</div>
+      </div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+
+    <div id="wsfuScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Water Fixture Unit (WSFU) Conversion</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="label">Sizing Basis</div>
+          <div class="field">
+            <select id="wsfuFlushType" onchange="updateWsfuTotalsAndUI();">
+              <option value="FLUSH_TANK">Flush Tank</option>
+              <option value="FLUSH_VALVE">Flush Valve</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="label">Usage Type</div>
+          <div class="field">
+            <select id="wsfuUsageType" onchange="updateWsfuTotalsAndUI();">
+              <option value="PRIVATE">Private</option>
+              <option value="PUBLIC">Public</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="label">Design Length (ft)</div>
+          <div class="field"><input type="number" id="wsfuDesignLength" step="0.01" value="100" oninput="updateWsfuTotalsAndUI();" onchange="updateWsfuTotalsAndUI();" /></div>
+        </div>
+        <div class="manager-box">
+          <div class="manager-title">WSFU Zones</div>
+          <div id="wsfuFixtureRows"></div>
+          <div class="wsfu-fixture-actions">
+            <input type="button" class="btn wsfu-add-fixture-btn" value="+ ADD ZONE" onclick="addWsfuZone();" />
+          </div>
+        </div>
+        <div class="manager-box wsfu-totals-box">
+          <div class="manager-title">WSFU Totals</div>
+          <div class="row wsfu-compact-row">
+            <div class="label">Calculated Total WSFU</div>
+            <div class="field"><input type="number" id="wsfuAutoTotalFu" step="0.001" value="0" readonly="readonly" /></div>
+          </div>
+          <div class="row wsfu-compact-row">
+            <div class="label">Manual Override</div>
+            <div class="field"><input type="checkbox" id="wsfuUseManualTotal" class="wsfu-checkbox" onchange="updateWsfuTotalsAndUI();" /></div>
+          </div>
+          <div class="row wsfu-compact-row">
+            <div class="label">Override WSFU</div>
+            <div class="field"><input type="number" id="wsfuManualTotalFu" step="0.001" value="0" oninput="updateWsfuTotalsAndUI();" /></div>
+          </div>
+          <div class="row wsfu-compact-row">
+            <div class="label">Effective WSFU</div>
+            <div class="field"><input type="number" id="wsfuTotalFu" step="0.001" value="0" readonly="readonly" /></div>
+          </div>
+          <div class="module-note" id="wsfuPreview">Preview updates as you edit inputs. Click CALCULATE to commit to Results.</div>
+        </div>
+        <div class="wsfu-actions">
+          <input type="button" class="btn btn-reset" value="RESET" onclick="resetWsfuSection();" />
+          <input type="button" class="btn" value="CALCULATE" onclick="calculateWsfu();" />
+        </div>
+      </div>
+      <div class="result-card">
+        <div class="result-title">Calculated Results</div>
+        <div id="wsfuResults" class="subtle">Enter fixture rows and press Calculate.</div>
+      </div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+
+    <div id="ductScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Duct Sizer</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="card">
+        <div class="manager-box duct-group">
+          <div class="manager-title">Duct Zones</div>
+          <div id="ductZonesContainer"></div>
+          <div style="text-align:right; margin-top:6px;">
+            <input type="button" class="btn cond-secondary-btn" value="+ ADD ZONE" onclick="addDuctZone();" />
+          </div>
+        </div>
+        <div class="duct-preview-strip" id="ductPreview">
+          <div class="duct-preview-item"><span class="duct-preview-label">Zones</span><span class="duct-preview-value">1</span></div>
+          <div class="duct-preview-item"><span class="duct-preview-label">Segments</span><span class="duct-preview-value">1</span></div>
+          <div class="duct-preview-item"><span class="duct-preview-label">Calculated</span><span class="duct-preview-value">0</span></div>
+          <div class="duct-preview-status">Add duct segment inputs by zone, then click CALCULATE.</div>
+        </div>
+        <div style="text-align:right;">
+          <input type="button" class="btn btn-reset" value="RESET" onclick="resetDuctSection();" />
+          <input type="button" class="btn duct-calc-btn" value="CALCULATE" onclick="calculateDuct(true);" />
+        </div>
+      </div>
+      <div class="result-card duct-results-card">
+        <div class="result-title">Calculated Results</div>
+        <div id="ductResults" class="subtle result-placeholder">Enter airflow and sizing criteria to see live duct size recommendations.</div>
+      </div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+
+    <div id="fixtureUnitScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Fixture Unit Calculator</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="card fixture-unit-card">
+        <div class="module-note fixture-unit-subtitle">Enter plumbing fixtures once and calculate both sanitary drainage and water supply fixture loads.</div>
+        <div class="fixture-unit-settings-card">
+          <div class="fixture-unit-settings-grid">
+            <div class="fixture-unit-settings-col">
+              <div class="fixture-unit-settings-title">Code + Water Basis</div>
+              <div class="row">
+                <div class="label">Code Basis</div>
+                <div class="field">
+                  <select id="fixtureUnitCodeBasis" onchange="updateFixtureUnitRowsAndPreview();">
+                    <option value="IPC" selected="selected">International Plumbing Code (IPC)</option>
+                    <option value="CPC">California Plumbing Code (CPC)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="label">Water Sizing Basis</div>
+                <div class="field">
+                  <select id="fixtureUnitFlushType" onchange="updateFixtureUnitRowsAndPreview();">
+                    <option value="FLUSH_TANK" selected="selected">Flush Tank</option>
+                    <option value="FLUSH_VALVE">Flush Valve</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="fixture-unit-settings-col">
+              <div class="fixture-unit-settings-title">Drainage + Length</div>
+              <div class="row">
+                <div class="label">Drainage Orientation</div>
+                <div class="field">
+                  <select id="fixtureUnitDrainageOrientation" onchange="updateFixtureUnitRowsAndPreview();">
+                    <option value="HORIZONTAL" selected="selected">Drainage Horizontal</option>
+                    <option value="VERTICAL">Drainage Vertical</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="label">Water Design Length (ft)</div>
+                <div class="field"><input type="number" id="fixtureUnitDesignLength" step="0.01" value="100" oninput="updateFixtureUnitRowsAndPreview();" onchange="updateFixtureUnitRowsAndPreview();" /></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="manager-box fixture-unit-table-shell">
+          <div class="manager-title">Fixture Zones</div>
+          <div id="fixtureUnitZonesContainer"></div>
+        </div>
+        <div id="fixtureUnitSummaryStrip" class="fixture-unit-summary-strip"></div>
+        <div class="module-note" id="fixtureUnitPreview">Preview updates as you edit fixtures. Click CALCULATE to commit to Results.</div>
+        <div class="fixture-unit-main-actions">
+          <input type="button" class="btn btn-reset" value="RESET" onclick="resetFixtureUnitSection();" />
+          <input type="button" class="btn" value="CALCULATE" onclick="calculateFixtureUnit(true);" />
+        </div>
+      </div>
+      <div class="fixture-unit-results-grid">
+        <div class="result-card">
+          <div class="result-title">Sanitary Results</div>
+          <div id="fixtureUnitSanitaryResults" class="subtle">Add fixtures to generate sanitary drainage results.</div>
+        </div>
+        <div class="result-card">
+          <div class="result-title">Water Supply Results</div>
+          <div id="fixtureUnitWaterResults" class="subtle">Add fixtures to generate water supply fixture unit results.</div>
+        </div>
+      </div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+
+    <div id="ductStaticScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Ducts Static Pressure Calculator</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="card">
+        <div class="manager-box duct-group">
+          <div class="duct-section-title">Duct Segments</div>
+          <div id="ductStaticSegments"></div>
+          <div style="text-align:right; margin-top:6px;">
+            <input type="button" class="btn ductstatic-add-btn" value="+ ADD SEGMENT" onclick="addDuctStaticSegment();" />
+          </div>
+        </div>
+        <div class="ductstatic-preview-strip" id="ductStaticPreview">
+          <div class="ductstatic-preview-item"><span class="ductstatic-preview-label">Segments</span><span class="ductstatic-preview-value">0</span></div>
+          <div class="ductstatic-preview-item"><span class="ductstatic-preview-label">Total Pressure Drop</span><span class="ductstatic-preview-value">0.00000 in.wg</span></div>
+          <div class="ductstatic-preview-status">Enter duct segment data to calculate total static pressure drop.</div>
+        </div>
+        <div style="text-align:right;">
+          <input type="button" class="btn btn-reset" value="RESET" onclick="resetDuctStaticSection();" />
+          <input type="button" class="btn btn-secondary" value="CALCULATE" onclick="calculateDuctStatic();" />
+        </div>
+      </div>
+      <div class="result-card ductstatic-results-card">
+        <div class="result-title">Results</div>
+        <div id="ductStaticResults" class="subtle result-placeholder">Enter duct segment data to calculate total static pressure drop.</div>
+      </div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+    <div id="solarScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Solar Calculation</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="card solar-card">
+        <div class="solar-group">
+          <div class="solar-group-title">Section 1 - Building Info</div>
+          <div class="solar-grid">
+            <div class="row">
+              <div class="label">Building Total SF (CFA, ft²)</div>
+              <div class="field"><input type="number" id="solarBuildingSf" step="0.01" value="0" oninput="updateSolarPreview();" onchange="updateSolarPreview();" /></div>
+            </div>
+            <div class="row">
+              <div class="label">Building Type</div>
+              <div class="field">
+                <select id="solarBuildingType" onchange="updateSolarPreview();">
+                  <option value="Grocery">Grocery</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="solar-group">
+          <div class="solar-group-title">Section 2 - Climate</div>
+          <div class="solar-grid">
+            <div class="row">
+              <div class="label">ZIP Code (5-digit)</div>
+              <div class="field"><input type="text" id="solarZip" maxlength="10" placeholder="Enter ZIP for climate lookup" oninput="onSolarZipInput();" onchange="onSolarZipInput();" /></div>
+            </div>
+            <div class="row">
+              <div class="label">Climate Zone (override)</div>
+              <div class="field"><input type="number" id="solarClimateZone" step="1" min="1" max="16" placeholder="Auto from ZIP if blank" oninput="onSolarClimateZoneInput();" onchange="onSolarClimateZoneInput();" /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="solar-group">
+          <div class="solar-group-title">Section 3 - Compliance Path</div>
+          <div class="solar-grid">
+            <div class="row">
+              <div class="label">Use SARA Path</div>
+              <div class="field"><input type="checkbox" id="solarUseSaraPath" class="solar-checkbox" onchange="onSolarSaraToggle();" /></div>
+            </div>
+            <div class="row" id="solarSaraRow">
+              <div class="label">SARA [ft²]</div>
+              <div class="field">
+                <input type="number" id="solarSara" step="0.01" placeholder="Optional. If blank, minimum SARA is used." oninput="updateSolarPreview();" onchange="updateSolarPreview();" />
+                <div class="module-note solar-inline-help">Solar Access Roof Area</div>
+              </div>
+            </div>
+            <div class="row" id="solarDValueRow">
+              <div class="label">Demand Factor (D, unitless)</div>
+              <div class="field">
+                <input type="number" id="solarDValue" step="0.01" value="0" oninput="updateSolarPreview();" onchange="updateSolarPreview();" />
+                <div class="module-note solar-inline-help">Demand adjustment factor per code (e.g., 0.6)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="solar-group">
+          <div class="solar-group-title">Section 4 - Exceptions</div>
+          <div class="solar-grid solar-exception-grid">
+            <div class="solar-toggle-option">
+              <span>Solar Exemption</span>
+              <input type="checkbox" id="solarExempt" class="solar-checkbox" onchange="updateSolarPreview();" />
+            </div>
+            <div class="solar-toggle-option">
+              <span>Battery Exemption</span>
+              <input type="checkbox" id="batteryExempt" class="solar-checkbox" onchange="updateSolarPreview();" />
+            </div>
+          </div>
+        </div>
+
+        <div class="solar-group">
+          <div class="solar-group-title">Section 5 - Notes / Remarks</div>
+          <div class="row">
+            <div class="label">Notes</div>
+            <div class="field"><input type="text" id="solarNotes" placeholder="Optional project notes..." oninput="updateSolarPreview();" onchange="updateSolarPreview();" /></div>
+          </div>
+        </div>
+
+        <div class="module-note" id="solarPreview">Preview updates as you edit inputs. Click CALCULATE to commit to Results.</div>
+        <div class="solar-actions">
+          <input type="button" class="btn btn-reset" value="RESET" onclick="resetSolarSection();" />
+          <input type="button" class="btn" value="CALCULATE" onclick="calculateSolar();" />
+        </div>
+      </div>
+      <div class="result-card solar-results-card">
+        <div class="result-title">Results</div>
+        <div id="solarResults" class="subtle">Enter worksheet inputs to see live Solar results (or press CALCULATE).</div>
+      </div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+
+    <div id="refrigerantScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Refrigerant Compliance</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="card">
+        <div class="refrig-banner">Use a consistent version set for all table values and equations in this calculation.</div>
+        <div class="row refrig-mode-toolbar">
+          <div class="label">Calculation Mode</div>
+          <div class="field">
+            <select id="refCalculationMode" onchange="onRefrigerantInputsChanged();">
+              <option value="SINGLE" selected="selected">Single Calculation</option>
+              <option value="MULTI_ZONE">Multi-Zone Table</option>
+            </select>
+          </div>
+        </div>
+        <div id="refLiveSummary" class="refrig-live-summary">
+          <span class="refrig-live-pill">Standard: -</span>
+          <span class="refrig-live-pill">Method: -</span>
+          <span class="refrig-live-pill">Refrigerant: -</span>
+          <span class="refrig-live-pill">Status: Incomplete</span>
+          <span class="refrig-live-pill">Total Charge: 0.00 pounds</span>
+        </div>
+
+        <div id="refSingleModeContent">
+
+        <div class="refrig-group">
+          <div class="refrig-title">1. System Classification</div>
+          <div class="row">
+            <div class="label">Refrigerant Type</div>
+            <div class="field">
+              <select id="refRefrigerantType" onchange="onRefrigerantInputsChanged();">
+                <option value="R-32">R-32</option>
+                <option value="R-452B">R-452B</option>
+                <option value="R-454A">R-454A</option>
+                <option value="R-454B" selected="selected">R-454B</option>
+                <option value="R-454C">R-454C</option>
+                <option value="R-457A">R-457A</option>
+                <option value="OTHER_A2L">Other A2L</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Safety Group</div>
+            <div class="field"><input type="text" id="refSafetyGroup" value="A2L" readonly="readonly" /></div>
+          </div>
+          <div class="row">
+            <div class="label">System Type</div>
+            <div class="field">
+              <select id="refSystemType" onchange="onRefrigerantInputsChanged();">
+                <option value="SPLIT_DX">Split DX</option>
+                <option value="RTU">RTU</option>
+                <option value="VRF">VRF</option>
+                <option value="PTAC">PTAC</option>
+                <option value="WSHP">WSHP</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Space Type</div>
+            <div class="field">
+              <select id="refSpaceType" onchange="onRefrigerantInputsChanged();">
+                <option value="RESIDENTIAL">Residential dwelling unit</option>
+                <option value="COMMON">Common area / nonresidential</option>
+                <option value="COMMERCIAL">Commercial / tenant space</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">One system serves one dwelling unit?</div>
+            <div class="field">
+              <select id="refOneSystemOneDwelling" onchange="onRefrigerantInputsChanged();">
+                <option value="YES" selected="selected">Yes</option>
+                <option value="NO">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">High-probability system?</div>
+            <div class="field">
+              <select id="refHighProbability" onchange="onRefrigerantInputsChanged();">
+                <option value="YES" selected="selected">Yes</option>
+                <option value="NO">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Data Version</div>
+            <div class="field">
+              <select id="refDataVersion" onchange="onRefrigerantInputsChanged();">
+                <option value="ADDENDA" selected="selected">Accepted addenda values</option>
+                <option value="ORIGINAL_2022">Original 2022 values</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Applicable Standard</div>
+            <div class="field"><div id="refApplicableStandardBadge" class="refrig-readonly">ASHRAE 15.2</div></div>
+          </div>
+          <div class="module-note" id="refStandardReason">ASHRAE 15.2 selected because the system is a one-to-one residential dwelling unit high-probability system.</div>
+        </div>
+
+        <div class="refrig-group">
+          <div class="refrig-title">2. Refrigerant Charge</div>
+          <div class="row"><div class="label">Factory Charge [pounds]</div><div class="field"><input type="number" min="0" id="refFactoryCharge" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+          <div class="row"><div class="label">Field Charge [pounds]</div><div class="field"><input type="number" min="0" id="refFieldCharge" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+          <div class="row"><div class="label">Installed Pipe Length [feet]</div><div class="field"><input type="number" min="0" id="refInstalledPipeLength" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+          <div class="row"><div class="label">Included Pipe Length [feet]</div><div class="field"><input type="number" min="0" id="refIncludedPipeLength" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+          <div class="row"><div class="label">Additional Charge Rate [pounds/feet]</div><div class="field"><input type="number" min="0" id="refAdditionalChargeRate" step="0.0001" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+          <div class="row"><div class="label">Manual Override Additional Charge?</div><div class="field"><input type="checkbox" id="refUseManualAdditionalCharge" style="width:auto; height:auto; margin-top:9px;" onchange="onRefrigerantInputsChanged();" /></div></div>
+          <div class="row" id="refManualAdditionalChargeRow"><div class="label">Manual Additional Charge [pounds]</div><div class="field"><input type="number" min="0" id="refManualAdditionalCharge" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+          <div class="refrig-charge-summary" id="refChargeSummary">
+            <span class="refrig-charge-item"><span class="refrig-charge-label">Additional Charge</span><span class="refrig-charge-value">0.00 lb</span></span>
+            <span class="refrig-charge-item"><span class="refrig-charge-label">Total System Charge (ms)</span><span class="refrig-charge-value">0.00 lb</span></span>
+          </div>
+        </div>
+
+        <div class="refrig-group">
+          <div class="refrig-title">3. Compliance Inputs</div>
+          <div id="refAshrae15Section">
+            <div class="refrig-subtitle">ASHRAE 15 Compliance Method</div>
+            <div class="row">
+              <div class="label">Equation Selection Mode</div>
+              <div class="field">
+                <select id="refEqSelectionMode" onchange="onRefrigerantInputsChanged();">
+                  <option value="AUTO" selected="selected">Auto Select</option>
+                  <option value="MANUAL">Manual Select</option>
+                </select>
+              </div>
+            </div>
+            <div class="row"><div class="label">Connected spaces via permanent openings/ductwork?</div><div class="field"><select id="refConnectedSpaces" onchange="onRefrigerantInputsChanged();"><option value="NO" selected="selected">No</option><option value="YES">Yes</option></select></div></div>
+            <div class="row"><div class="label">Air circulation provided?</div><div class="field"><select id="refAirCirculation" onchange="onRefrigerantInputsChanged();"><option value="YES" selected="selected">Yes</option><option value="NO">No</option></select></div></div>
+            <div class="row" id="refManualEqRow"><div class="label">Manual Equation Selection</div><div class="field"><select id="refManualEquation" onchange="onRefrigerantInputsChanged();"><option value="EQ_7_8">Equation 7-8</option><option value="EQ_7_9">Equation 7-9</option></select></div></div>
+            <div class="module-note" id="refEquationBadge">Using Equation 7-8</div>
+
+            <div id="refEq78Fields">
+            <div class="row"><div class="label">Room Area [square feet]</div><div class="field"><input type="number" min="0" id="refRoomArea78" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Ceiling Height [feet]</div><div class="field"><input type="number" min="0" id="refCeilingHeight78" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+              <div class="row"><div class="label">LFL (lb/1000 ft3)</div><div class="field"><input type="number" min="0" id="refLfl78" step="0.0001" value="18.5" oninput="onRefrigerantInputsChanged();" /></div></div>
+              <div class="row"><div class="label">CF</div><div class="field"><input type="number" min="0" id="refCf78" step="0.0001" value="0.5" oninput="onRefrigerantInputsChanged();" /></div></div>
+              <div class="row"><div class="label">Focc</div><div class="field"><input type="number" min="0" id="refFocc78" step="0.0001" value="1" oninput="onRefrigerantInputsChanged();" /></div></div>
+            </div>
+
+            <div id="refEq79Fields">
+              <div class="row"><div class="label">Mdef (lb)</div><div class="field"><input type="number" min="0" id="refMdef79" step="0.0001" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+              <div class="row"><div class="label">FLFL</div><div class="field"><input type="number" min="0" id="refFlfl79" step="0.0001" value="1" oninput="onRefrigerantInputsChanged();" /></div></div>
+              <div class="row"><div class="label">Focc</div><div class="field"><input type="number" min="0" id="refFocc79" step="0.0001" value="1" oninput="onRefrigerantInputsChanged();" /></div></div>
+              <div class="row"><div class="label">Lowest Opening Height [feet]</div><div class="field"><input type="number" min="0" id="refLowestOpeningHeight79" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+              <div class="row"><div class="label">Optional Room Area [square feet]</div><div class="field"><input type="number" min="0" id="refOptionalRoomArea79" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            </div>
+          </div>
+
+          <div id="refAshrae152Section">
+            <div class="refrig-subtitle">ASHRAE 15.2 Compliance Path</div>
+            <div class="row"><div class="label">m1 (lb)</div><div class="field"><input type="number" min="0" id="refM1_152" step="0.0001" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">m2 (lb)</div><div class="field"><input type="number" min="0" id="refM2_152" step="0.0001" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Room Area [square feet]</div><div class="field"><input type="number" min="0" id="refRoomArea152" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Room Volume [cubic feet]</div><div class="field"><input type="number" min="0" id="refRoomVolume152" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Space Height [feet]</div><div class="field"><input type="number" min="0" id="refSpaceHeight152" step="0.01" value="7.2" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Ventilation used?</div><div class="field"><select id="refVentilation152" onchange="onRefrigerantInputsChanged();"><option value="NO" selected="selected">No</option><option value="YES">Yes</option></select></div></div>
+            <div class="row" id="refVentilationCfmRow152"><div class="label">Ventilation Rate [cfm]</div><div class="field"><input type="number" min="0" id="refVentilationCfm152" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">C (Table 9-2)</div><div class="field"><input type="text" id="refCcalc152" readonly="readonly" value="0.0000" /></div></div>
+            <div class="row"><div class="label">M (Table 9-3)</div><div class="field"><input type="text" id="refMcalc152" readonly="readonly" value="0.0000" /></div></div>
+            <div class="row"><div class="label">hc</div><div class="field"><input type="text" id="refHc152" readonly="readonly" value="1.0000" /></div></div>
+            <div class="row"><div class="label">Mc (lb)</div><div class="field"><input type="text" id="refMc152" readonly="readonly" value="0.0000" /></div></div>
+            <div class="row"><div class="label">Mv (lb)</div><div class="field"><input type="text" id="refMv152" readonly="readonly" value="0.0000" /></div></div>
+            <div class="row"><div class="label">mMAX No Vent (lb)</div><div class="field"><input type="text" id="refMmaxNoVent152" readonly="readonly" value="0.0000" /></div></div>
+            <div class="row"><div class="label">mMAX With Vent (lb)</div><div class="field"><input type="text" id="refMmaxWithVent152" readonly="readonly" value="0.0000" /></div></div>
+            <div class="refrig-inline-footer">
+              <div class="row"><div class="label">Safety shut-off valves used?</div><div class="field"><select id="refSsov152" onchange="onRefrigerantInputsChanged();"><option value="NO" selected="selected">No</option><option value="YES">Yes</option></select></div></div>
+              <div class="module-note">Live Check Status: <span id="refComplianceLiveStatus" class="refrig-status incomplete">INCOMPLETE</span></div>
+            </div>
+
+            <details id="refAdvanced152" class="refrig-advanced">
+              <summary>Advanced: Releasable Charge (mrel) / SSOV</summary>
+              <div class="row"><div class="label">Interpolate Table Values?</div><div class="field"><select id="refInterpolate152" onchange="onRefrigerantInputsChanged();"><option value="YES" selected="selected">Yes</option><option value="NO">No</option></select></div></div>
+              <div class="row"><div class="label">Allow Area Extrapolation &gt; 1025 ft2?</div><div class="field"><select id="refAllowAreaExtrapolation152" onchange="onRefrigerantInputsChanged();"><option value="NO" selected="selected">No</option><option value="YES">Yes</option></select></div></div>
+              <div class="row"><div class="label">Override C lookup?</div><div class="field"><select id="refUseCOverride152" onchange="onRefrigerantInputsChanged();"><option value="NO" selected="selected">No</option><option value="YES">Yes</option></select></div></div>
+              <div class="row" id="refCOverrideRow152"><div class="label">Manual C Override</div><div class="field"><input type="number" min="0" id="refCOverride152" step="0.0001" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+              <div class="row"><div class="label">Use releasable charge instead of system charge?</div><div class="field"><select id="refUseMrel152" onchange="onRefrigerantInputsChanged();"><option value="NO" selected="selected">No</option><option value="YES">Yes</option></select></div></div>
+              <div class="row"><div class="label">mrel (lb)</div><div class="field"><input type="number" min="0" id="refMrel152" step="0.0001" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            </details>
+          </div>
+          <div class="refrig-footer-row">
+            <div class="module-note" id="refPreview">Live check: Enter required inputs to evaluate compliance.</div>
+            <div class="refrig-actions">
+              <input type="button" class="btn btn-reset" value="RESET" onclick="resetRefrigerantSection();" />
+              <input type="button" class="btn" value="CALCULATE" onclick="calculateRefrigerantCompliance(true);" />
+            </div>
+          </div>
+        </div>
+
+        </div>
+
+        <div id="refMultiModeContent" style="display:none;">
+          <div class="refrig-group">
+            <div class="refrig-title">1. Shared Assumptions</div>
+            <div class="row"><div class="label">Refrigerant Type</div><div class="field"><select id="refMzRefrigerantType" onchange="onRefrigerantInputsChanged();"><option value="R-32">R-32</option><option value="R-452B">R-452B</option><option value="R-454A">R-454A</option><option value="R-454B" selected="selected">R-454B</option><option value="R-454C">R-454C</option><option value="R-457A">R-457A</option><option value="OTHER_A2L">Other A2L</option></select></div></div>
+            <div class="row"><div class="label">Safety Group</div><div class="field"><input type="text" id="refMzSafetyGroup" value="A2L" readonly="readonly" /></div></div>
+            <div class="row"><div class="label">Standard Path</div><div class="field"><select id="refMzStandardPath" onchange="onRefrigerantInputsChanged();"><option value="AUTO" selected="selected">Auto</option><option value="ASHRAE_15">ASHRAE 15</option><option value="ASHRAE_15_2">ASHRAE 15.2</option></select></div></div>
+            <div class="row"><div class="label">Data Version</div><div class="field"><select id="refMzDataVersion" onchange="onRefrigerantInputsChanged();"><option value="ADDENDA" selected="selected">Accepted addenda values</option><option value="ORIGINAL_2022">Original 2022 values</option></select></div></div>
+            <div class="row"><div class="label">Default Pipe Size</div><div class="field"><input type="text" id="refMzDefaultPipeSize" value="3/8 in" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Default Charge per Foot (lb/ft)</div><div class="field"><input type="number" min="0" id="refMzDefaultChargePerFt" step="0.0001" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Default Factory Charge (lb)</div><div class="field"><input type="number" min="0" id="refMzDefaultFactoryCharge" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Ventilation considered?</div><div class="field"><select id="refMzVentilationConsidered" onchange="onRefrigerantInputsChanged();"><option value="NO" selected="selected">No</option><option value="YES">Yes</option></select></div></div>
+            <div class="row"><div class="label">SSOV considered?</div><div class="field"><select id="refMzSsovConsidered" onchange="onRefrigerantInputsChanged();"><option value="NO" selected="selected">No</option><option value="YES">Yes</option></select></div></div>
+            <div class="row"><div class="label">Default Number of Units</div><div class="field"><input type="number" min="0" id="refMzDefaultUnits" step="1" value="1" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Default Space Height (ft)</div><div class="field"><input type="number" min="0" id="refMzDefaultSpaceHeight" step="0.01" value="7.2" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Default Ventilation Rate (cfm)</div><div class="field"><input type="number" min="0" id="refMzDefaultVentCfm" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Default m1 (lb)</div><div class="field"><input type="number" min="0" id="refMzDefaultM1" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Default m2 (lb)</div><div class="field"><input type="number" min="0" id="refMzDefaultM2" step="0.01" value="0" oninput="onRefrigerantInputsChanged();" /></div></div>
+            <div class="row"><div class="label">Interpolate Table Values?</div><div class="field"><select id="refMzInterpolate" onchange="onRefrigerantInputsChanged();"><option value="YES" selected="selected">Yes</option><option value="NO">No</option></select></div></div>
+            <div class="row"><div class="label">Allow Area Extrapolation &gt; 1025 ft2?</div><div class="field"><select id="refMzAllowAreaExtrapolation" onchange="onRefrigerantInputsChanged();"><option value="NO" selected="selected">No</option><option value="YES">Yes</option></select></div></div>
+            <div class="refrig-toolbar">
+              <input type="button" class="btn btn-toolbar" value="APPLY SHARED DEFAULTS TO ALL ROWS" onclick="applyRefrigerantSharedDefaultsToAllRows();" />
+            </div>
+          </div>
+
+          <div class="refrig-group">
+            <div class="refrig-title">2. Multi-Zone Table</div>
+            <div class="refrig-toolbar">
+              <input type="button" class="btn btn-secondary" value="+ ADD ROW" onclick="addRefrigerantMultiRow();" />
+              <input type="button" class="btn btn-toolbar" value="DUPLICATE SELECTED ROW" onclick="duplicateRefrigerantSelectedRow();" />
+              <input type="button" class="btn btn-small" value="DELETE SELECTED ROW" onclick="deleteRefrigerantSelectedRow();" />
+              <input type="button" class="btn btn-toolbar" value="CLEAR TABLE" onclick="clearRefrigerantMultiRows();" />
+            </div>
+            <div class="refrig-table-wrap">
+              <table class="refrig-table refrig-mz-table">
+                <thead>
+                  <tr>
+                    <th class="center">Select</th>
+                    <th>Room ID</th>
+                    <th class="num">Room Volume (ft3)</th>
+                    <th class="num">Room Area (ft2)</th>
+                    <th class="num">Space Height (ft)</th>
+                    <th class="num">Pipe Length (feet)</th>
+                    <th>Pipe Size</th>
+                    <th class="num">Number of Units</th>
+                    <th class="num">Charge per Foot (pounds)</th>
+                    <th class="num">Factory Charge (pounds)</th>
+                    <th class="num">Line Charge (pounds)</th>
+                    <th class="num">Total Charge (pounds)</th>
+                    <th class="num">mREL (pounds)</th>
+                    <th class="num">m1 (pounds)</th>
+                    <th class="num">m2 (pounds)</th>
+                    <th class="num">C</th>
+                    <th class="num">M</th>
+                    <th class="num">hc</th>
+                    <th class="num">Mc (pounds)</th>
+                    <th class="num">Mv (pounds)</th>
+                    <th class="num">mMAX No Vent (pounds)</th>
+                    <th class="num">mMAX With Vent (pounds)</th>
+                    <th>Compliance No Vent</th>
+                    <th>Compliance With Vent</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="refMultiRowsBody"></tbody>
+              </table>
+            </div>
+            <div id="refMultiSummary" class="refrig-summary-strip">Rows: 0 | Compliant: 0 | Not Compliant: 0 | Manual Review: 0</div>
+          </div>
+          <div class="refrig-footer-row">
+            <div class="module-note" id="refPreviewMulti">Live table check: Enter row inputs to evaluate compliance.</div>
+            <div class="refrig-actions">
+              <input type="button" class="btn btn-reset" value="RESET" onclick="resetRefrigerantSection();" />
+              <input type="button" class="btn" value="CALCULATE" onclick="calculateRefrigerantCompliance(true);" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-card refrig-results-card">
+        <div class="result-title">4. Results</div>
+        <div id="refrigerantResults" class="subtle">Enter classification and charge data to see compliance results.</div>
+      </div>
+
+      <div class="result-card refrig-notes-card">
+        <details class="refrig-notes-collapse">
+          <summary class="result-title">5. Notes / Checks (4 reminders)</summary>
+          <div id="refrigerantNotes" class="subtle">
+            <div class="result-line">- Refrigerant piping floor plan on each floor level</div>
+            <div class="result-line">- Shaft requirement review if piping penetrates two or more floor/ceiling assemblies</div>
+            <div class="result-line">- Refrigerant detection system when required</div>
+            <div class="result-line">- Listed components per applicable UL standard</div>
+            <div class="module-note">For refrigerant piping penetrating two or more floor/ceiling assemblies, shaft review is required.</div>
+          </div>
+        </details>
+      </div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+  </div>
+  <script src="js/constants.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/dom.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/modules/home.js"></script>
+  <script src="js/modules/storm.js"></script>
+  <script src="js/modules/condensate.js"></script>
+  <script src="js/modules/vent.js"></script>
+  <script src="js/modules/gas.js"></script>
+  <script src="js/modules/wsfu.js"></script>
+  <script src="js/modules/fixture-unit.js"></script>
+  <script src="js/modules/solar.js"></script>
+  <script src="js/modules/duct.js"></script>
+  <script src="js/modules/duct-static.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

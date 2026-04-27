@@ -1,0 +1,2 @@
+﻿class CondensateService:
+    pass

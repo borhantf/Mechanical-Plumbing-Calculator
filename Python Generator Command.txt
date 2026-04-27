@@ -1,0 +1,1 @@
+python -m PyInstaller --noconfirm --clean --onefile --windowed --name "Mechanical and Plumbing Calculator" --icon "runoff-icon.ico" --add-data "app;app" main.py

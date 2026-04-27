@@ -1,0 +1,2 @@
+﻿class DuctStaticService:
+    pass

@@ -1,0 +1,499 @@
+﻿#refrigerantScreen .card {
+  padding: 8px;
+}
+
+#refrigerantScreen .refrig-group {
+  border: 1px solid #d8e3f2;
+  border-radius: 10px;
+  background: #fbfdff;
+  padding: 7px;
+  margin-bottom: 6px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 10px;
+}
+
+#refrigerantScreen .refrig-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f3b68;
+  margin: 0;
+  grid-column: 1 / -1;
+}
+
+#refrigerantScreen .refrig-subtitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #274a7d;
+  margin: 1px 0 0;
+  grid-column: 1 / -1;
+}
+
+#refrigerantScreen .refrig-banner {
+  border: 1px solid #ffe6bf;
+  background: #fff8e8;
+  color: #8a5a11;
+  padding: 5px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+#refrigerantScreen .refrig-summary-strip {
+  margin-top: 2px;
+  border: 1px solid #cbdcf5;
+  background: #eff5ff;
+  color: #173a66;
+  border-radius: 8px;
+  padding: 4px 7px;
+  font-size: 11px;
+  font-weight: 600;
+  grid-column: 1 / -1;
+}
+
+#refrigerantScreen .refrig-charge-summary {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  border: 1px solid #cbdcf5;
+  background: #f4f8ff;
+  border-radius: 8px;
+  padding: 5px 8px;
+}
+
+#refrigerantScreen .refrig-charge-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+#refrigerantScreen .refrig-charge-label {
+  font-size: 10.5px;
+  color: #486182;
+  white-space: nowrap;
+}
+
+#refrigerantScreen .refrig-charge-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: #173a66;
+  white-space: nowrap;
+}
+
+#refrigerantScreen .refrig-group .row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+}
+
+#refrigerantScreen .refrig-group .row .label {
+  width: auto;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.2;
+  padding-top: 0;
+}
+
+#refrigerantScreen .refrig-group .row .field {
+  width: 100%;
+}
+
+#refrigerantScreen .refrig-group input,
+#refrigerantScreen .refrig-group select {
+  height: 32px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+#refrigerantScreen .refrig-readonly {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid #c8d7ec;
+  border-radius: 8px;
+  background: #f3f7ff;
+  font-size: 11px;
+  font-weight: 600;
+  color: #193f6e;
+}
+
+#refrigerantScreen .refrig-group .row.refrig-mode-toolbar {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 150px minmax(220px, 360px);
+  align-items: center;
+  gap: 8px;
+}
+
+#refrigerantScreen .card > .row.refrig-mode-toolbar {
+  display: grid;
+  grid-template-columns: 150px minmax(220px, 360px);
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px 0;
+}
+
+#refrigerantScreen .card > .row.refrig-mode-toolbar .label {
+  width: auto;
+  min-width: 0;
+  font-size: 11px;
+  padding-top: 0;
+}
+
+#refrigerantScreen .refrig-group #refApplicableStandardBadge,
+#refrigerantScreen .refrig-group #refEquationBadge,
+#refrigerantScreen .refrig-group .refrig-toolbar,
+#refrigerantScreen .refrig-group .refrig-table-wrap,
+#refrigerantScreen .refrig-group #refMultiSummary,
+#refrigerantScreen .refrig-group #refStandardReason {
+  grid-column: 1 / -1;
+}
+
+#refrigerantScreen .refrig-group #refStandardReason {
+  margin-top: -2px;
+}
+
+#refrigerantScreen .refrig-group #refAshrae15Section,
+#refrigerantScreen .refrig-group #refAshrae152Section {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 10px;
+}
+
+#refrigerantScreen .refrig-group #refAshrae15Section > .refrig-subtitle,
+#refrigerantScreen .refrig-group #refAshrae15Section > #refEquationBadge,
+#refrigerantScreen .refrig-group #refAshrae152Section > .refrig-subtitle,
+#refrigerantScreen .refrig-group #refAshrae152Section > .refrig-advanced,
+#refrigerantScreen .refrig-group #refAshrae152Section > .refrig-inline-footer,
+#refrigerantScreen .refrig-group #refAshrae15Section > .refrig-footer-row,
+#refrigerantScreen .refrig-group #refAshrae152Section > .refrig-footer-row {
+  grid-column: 1 / -1;
+}
+
+#refrigerantScreen .refrig-group #refEq78Fields,
+#refrigerantScreen .refrig-group #refEq79Fields {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 10px;
+}
+
+#refrigerantScreen #refLiveSummary {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 1px 0 1px;
+}
+
+#refrigerantScreen .refrig-live-pill {
+  border: 1px solid #dde6f3;
+  background: #f7f9fc;
+  border-radius: 999px;
+  padding: 2px 7px;
+  font-size: 10.5px;
+  color: #455a77;
+}
+
+#refrigerantScreen .refrig-live-pill strong {
+  color: #334862;
+  font-weight: 600;
+}
+
+#refrigerantScreen .refrig-live-pill.status-pill {
+  border-color: #c5d6ef;
+  background: #eff5ff;
+}
+
+#refrigerantScreen .refrig-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+#refrigerantScreen .refrig-table-wrap {
+  border: 1px solid #d6e2f3;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: auto;
+  max-height: 380px;
+}
+
+#refrigerantScreen .refrig-mz-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#refrigerantScreen .refrig-mz-table input,
+#refrigerantScreen .refrig-mz-table select {
+  width: 100%;
+  min-width: 76px;
+  font-size: 11px;
+  padding: 4px 6px;
+  border: 1px solid #cbd7ea;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+#refrigerantScreen .refrig-mz-table .readonly {
+  background: #f7faff;
+  color: #1b3f70;
+  font-weight: 600;
+}
+
+#refrigerantScreen .refrig-mz-table .center {
+  text-align: center;
+}
+
+#refrigerantScreen .refrig-advanced {
+  border: 1px dashed #c5d4ea;
+  border-radius: 8px;
+  padding: 6px;
+  margin-top: 4px;
+  background: #f8fbff;
+  grid-column: 1 / -1;
+}
+
+#refrigerantScreen .refrig-advanced summary {
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: #23476f;
+  margin-bottom: 4px;
+}
+
+.refrig-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.refrig-status.ok {
+  color: #0e5a39;
+  background: #e6f6ee;
+  border: 1px solid #b7e7cd;
+}
+
+.refrig-status.fail {
+  color: #8a1f2b;
+  background: #fdecef;
+  border: 1px solid #f5c2ca;
+}
+
+.refrig-status.review {
+  color: #8a5a11;
+  background: #fff5df;
+  border: 1px solid #f3deb0;
+}
+
+.refrig-status.incomplete {
+  color: #475569;
+  background: #eef2f7;
+  border: 1px solid #d7dee8;
+}
+
+.refrig-result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  margin-bottom: 2px;
+  background: #f3f7ff;
+  border: 1px solid #dce7f8;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.refrig-result-main {
+  border: 1px solid #d3e2f7;
+  border-radius: 9px;
+  background: #f5f9ff;
+  padding: 4px;
+  margin-bottom: 3px;
+}
+
+.refrig-result-main.refrig-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.refrig-result-main .value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #102d58;
+  line-height: 1.1;
+}
+
+#refrigerantScreen .refrig-metric {
+  min-width: 0;
+}
+
+#refrigerantScreen .refrig-metric .module-note {
+  display: block;
+  margin: 0 0 1px 0;
+  font-size: 10px;
+  color: #607089;
+}
+
+#refrigerantScreen .refrig-margin-note {
+  margin: 1px 0 2px 0;
+  font-size: 10px;
+  color: #4f6786;
+}
+
+.refrig-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.refrig-table th,
+.refrig-table td {
+  font-size: 10.25px;
+  padding: 2px 3px;
+  border-bottom: 1px solid #e3ebf6;
+  text-align: left;
+}
+
+.refrig-table th {
+  background: #f6f9ff;
+  color: #23476f;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.refrig-table .num {
+  text-align: right;
+}
+
+#refrigerantScreen .refrig-results-card {
+  margin-top: 4px;
+}
+
+#refrigerantScreen #refrigerantResults .result-line {
+  margin: 0 0 2px 0;
+  line-height: 1.15;
+}
+
+#refrigerantScreen .refrig-inline-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+#refrigerantScreen .refrig-inline-footer .module-note {
+  margin: 0;
+  white-space: nowrap;
+  text-align: right;
+}
+
+#refrigerantScreen .refrig-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+  padding-top: 4px;
+  border-top: 1px solid #e3ebf6;
+}
+
+#refrigerantScreen .refrig-footer-row #refPreview,
+#refrigerantScreen .refrig-footer-row #refPreviewMulti {
+  margin: 0;
+}
+
+#refrigerantScreen .refrig-notes-card {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+#refrigerantScreen .refrig-notes-collapse summary {
+  cursor: pointer;
+  padding: 0;
+  line-height: 1.1;
+  min-height: 20px;
+}
+
+#refrigerantScreen .refrig-notes-collapse[open] #refrigerantNotes {
+  margin-top: 4px;
+}
+
+#refrigerantScreen .refrig-actions {
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#refrigerantScreen .refrig-actions .btn {
+  height: 30px;
+  padding: 0 10px;
+}
+
+#refrigerantScreen .refrig-result-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 10px;
+  color: #607087;
+}
+
+#refrigerantScreen .refrig-result-footer .refrig-conclusion {
+  color: #344a67;
+  font-size: 10.5px;
+}
+
+#refrigerantScreen .refrig-result-footer .refrig-timestamp {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 840px) {
+  #refrigerantScreen .refrig-group {
+    grid-template-columns: 1fr;
+  }
+  #refrigerantScreen .refrig-group .row.refrig-mode-toolbar {
+    grid-template-columns: 1fr;
+  }
+  #refrigerantScreen .card > .row.refrig-mode-toolbar {
+    grid-template-columns: 1fr;
+  }
+  #refrigerantScreen .refrig-group #refAshrae15Section,
+  #refrigerantScreen .refrig-group #refAshrae152Section,
+  #refrigerantScreen .refrig-group #refEq78Fields,
+  #refrigerantScreen .refrig-group #refEq79Fields,
+  #refrigerantScreen .refrig-inline-footer,
+  #refrigerantScreen .refrig-charge-summary {
+    grid-template-columns: 1fr;
+  }
+  #refrigerantScreen .refrig-inline-footer .module-note {
+    text-align: left;
+  }
+  #refrigerantScreen .refrig-footer-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #refrigerantScreen .refrig-actions {
+    justify-content: flex-end;
+  }
+  .refrig-result-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

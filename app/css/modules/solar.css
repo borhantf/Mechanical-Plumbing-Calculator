@@ -1,0 +1,152 @@
+/* module styles: solar.css */
+
+#solarScreen .solar-card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#solarScreen .solar-group {
+  border: 1px solid #d7e2f3;
+  border-radius: 10px;
+  background: #fbfdff;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+#solarScreen .solar-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f3f70;
+  margin-bottom: 6px;
+}
+
+#solarScreen .solar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+}
+
+#solarScreen .solar-grid .row {
+  margin-bottom: 0;
+}
+
+#solarScreen .solar-inline-help {
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+#solarScreen .solar-checkbox {
+  width: auto;
+  height: auto;
+  margin-top: 7px;
+}
+
+#solarScreen .solar-exception-grid {
+  gap: 8px;
+}
+
+#solarScreen .solar-toggle-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 34px;
+  border: 1px solid #d6e3f5;
+  border-radius: 8px;
+  background: #f7faff;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: #2b466b;
+}
+
+#solarScreen .solar-actions {
+  text-align: right;
+  margin-top: 4px;
+}
+
+#solarScreen .solar-results-card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#solarScreen .solar-results-section {
+  margin-bottom: 8px;
+}
+
+#solarScreen .solar-results-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f3f70;
+  margin-bottom: 5px;
+}
+
+#solarScreen .solar-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+#solarScreen .solar-summary-item {
+  border: 1px solid #d8e4f6;
+  border-radius: 8px;
+  background: #f9fbff;
+  padding: 6px 8px;
+}
+
+#solarScreen .solar-summary-label {
+  display: block;
+  font-size: 10px;
+  color: #577293;
+  margin-bottom: 1px;
+}
+
+#solarScreen .solar-summary-value {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #173a66;
+}
+
+#solarScreen .solar-summary-item.main {
+  grid-column: 1 / -1;
+  background: #eef5ff;
+  border-color: #c5d9f6;
+}
+
+#solarScreen .solar-summary-item.main .solar-summary-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #123a66;
+  line-height: 1.05;
+}
+
+#solarScreen .solar-battery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+#solarScreen .solar-note-box {
+  border: 1px solid #d8e4f6;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 6px 8px;
+  font-size: 11px;
+  color: #3e5f84;
+}
+
+#solarScreen .solar-path-disabled {
+  opacity: 0.55;
+}
+
+#solarScreen .solar-results-card .warning-line {
+  margin-bottom: 6px;
+}
+
+@media screen and (max-width: 900px) {
+  #solarScreen .solar-grid,
+  #solarScreen .solar-summary-grid,
+  #solarScreen .solar-battery-grid {
+    grid-template-columns: 1fr;
+  }
+}

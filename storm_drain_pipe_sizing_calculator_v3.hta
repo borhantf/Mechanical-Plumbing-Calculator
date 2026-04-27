@@ -1,0 +1,1212 @@
+<html>
+<head>
+  <title>Storm Drain Pipe Sizing Calculator</title>
+  <HTA:APPLICATION
+    APPLICATIONNAME="Storm Drain Pipe Sizing Calculator"
+    BORDER="thin"
+    BORDERSTYLE="normal"
+    CAPTION="yes"
+    CONTEXTMENU="yes"
+    MAXIMIZEBUTTON="yes"
+    MINIMIZEBUTTON="yes"
+    SHOWINTASKBAR="yes"
+    SINGLEINSTANCE="yes"
+    SYSMENU="yes"
+    WINDOWSTATE="normal"
+  />
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <style type="text/css">
+    body { font-family: Segoe UI, Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111827; }
+    .wrap { width: 100%; max-width: 980px; margin: 4px auto 10px auto; padding: 0 6px; box-sizing: border-box; }
+    h1 { font-size: 29px; font-weight: 700; margin: 4px 0 8px 0; letter-spacing: -0.3px; }
+    h2 { font-size: 24px; margin: 0 0 8px 0; }
+    .grid { width: 100%; overflow: hidden; }
+    .left { float: left; width: 58%; }
+    .right { float: right; width: 40%; }
+    .card {
+      background: #ffffff; border: 1px solid #e5e7eb; padding: 10px 12px; margin-bottom: 8px;
+      box-sizing: border-box; border-radius: 8px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .area-block {
+      border: 1px solid #d9e0ea; padding: 8px; margin-bottom: 7px; background: #f9fbff;
+      border-radius: 8px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .area-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .area-header-row { display: table; width: 100%; table-layout: fixed; margin-bottom: 4px; }
+    .area-title-inline {
+      display: table-cell; width: 16%; font-size: 14px; font-weight: 700; line-height: 28px;
+      margin-left: 0; vertical-align: middle;
+    }
+    .area-main-wrap { display: table-cell; width: 22%; vertical-align: middle; padding-right: 8px; }
+    .area-main-input {
+      width: 100%; height: 28px; font-size: 13px; padding: 3px 6px; box-sizing: border-box;
+      border: 1px solid #cfd6e0; background: #ffffff; margin-right: 0; border-radius: 6px;
+    }
+    .area-actions {
+      display: table-cell; width: 62%; line-height: 24px; text-align: right; white-space: nowrap;
+      vertical-align: middle; overflow: visible;
+    }
+    .subarea-count {
+      display: inline-block; vertical-align: middle; width: 72px; line-height: 24px; font-size: 12px; color: #475569; text-align: left;
+    }
+    .btn-area-action {
+      width: 88px; height: 26px; line-height: 26px; padding: 0 4px; font-size: 12px; text-align: center;
+      margin-left: 6px; vertical-align: middle; border-radius: 7px; box-sizing: border-box;
+    }
+    .area-actions .btn-area-action { display: inline-block; }
+    .btn-subarea { background: #1d4ed8; margin-right: 0; }
+    .btn-subarea:hover { background: #1e40af; }
+    .subareas-container { margin-top: 6px; clear: both; overflow: hidden; }
+    .sidewall-controls { clear: both; margin-top: 4px; text-align: right; line-height: 24px; overflow: visible; }
+    .sidewall-count {
+      display: inline-block; vertical-align: middle; width: 86px; line-height: 24px; font-size: 12px; color: #475569; text-align: left;
+    }
+    .sidewalls-container { margin-top: 4px; clear: both; overflow: hidden; }
+    .sidewall-row {
+      display: table; width: 100%; table-layout: fixed;
+      margin-bottom: 5px; padding-top: 5px; border-top: 1px dashed #dbe2ea;
+    }
+    .sidewall-label {
+      display: table-cell; width: 16%; vertical-align: middle;
+      line-height: 26px; font-size: 12px; color: #334155; padding-right: 8px;
+    }
+    .sidewall-input-wrap { display: table-cell; width: 54%; vertical-align: middle; }
+    .sidewall-input {
+      width: 100%; height: 28px; font-size: 13px; padding: 3px 6px; box-sizing: border-box;
+      border: 1px solid #cfd6e0; background: #ffffff; margin-right: 0;
+    }
+    .sidewall-actions {
+      display: table-cell; width: 30%; vertical-align: middle; text-align: right;
+      white-space: nowrap; padding-left: 8px;
+    }
+    .btn-sidewall { background: #2563eb; }
+    .btn-sidewall:hover { background: #1d4ed8; }
+    .btn-sideremove { background: #9f1239; }
+    .btn-sideremove:hover { background: #881337; }
+    .subarea-row {
+      display: table; width: 100%; table-layout: fixed;
+      margin-bottom: 5px; padding-top: 5px; border-top: 1px dashed #dbe2ea;
+    }
+    .subarea-label {
+      display: table-cell; width: 16%; vertical-align: middle;
+      line-height: 26px; font-size: 12px; color: #334155; padding-right: 8px;
+    }
+    .subarea-input-wrap { display: table-cell; width: 54%; vertical-align: middle; }
+    .subarea-input {
+      width: 100%; height: 28px; font-size: 13px; padding: 3px 6px; box-sizing: border-box;
+      border: 1px solid #cfd6e0; background: #ffffff; margin-right: 0;
+    }
+    .subarea-actions {
+      display: table-cell; width: 30%; vertical-align: middle; text-align: right;
+      white-space: nowrap; padding-left: 8px;
+    }
+    .btn-subremove { background: #991b1b; margin-left: 0; }
+    .btn-subremove:hover { background: #7f1d1d; }
+    .row { overflow: hidden; margin-bottom: 8px; }
+    .label { float: left; width: 42%; font-size: 15px; line-height: 34px; box-sizing: border-box; padding-right: 8px; }
+    .field { float: left; width: 58%; }
+    input[type=text], input[type=number], select {
+      width: 100%; height: 38px; font-size: 15px; padding: 6px 9px; box-sizing: border-box;
+      border: 1px solid #cfd6e0; background: #ffffff; border-radius: 6px;
+    }
+    select {
+      border-radius: 7px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    }
+    .input-error { border-color: #b42318 !important; background: #fff7f7 !important; }
+    .field-error { color: #b42318; font-size: 13px; margin-top: 4px; min-height: 16px; }
+    .validation-summary {
+      color: #b42318; font-size: 13px; margin-top: 7px; min-height: 18px; text-align: right;
+    }
+    .warning-line {
+      color: #b42318; font-size: 14px; margin-top: 6px; margin-bottom: 8px; min-height: 18px;
+    }
+    .btn {
+      display: inline-block; background: #1f3faa; color: #ffffff; border: 0; padding: 0 11px;
+      font-size: 12px; cursor: pointer; margin-top: 2px; margin-left: 6px; border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+      height: 28px; line-height: 28px;
+    }
+    .btn:hover { background: #19358f; }
+    .btn-secondary { background: #0f766e; }
+    .btn-secondary:hover { background: #0b5c56; }
+    .btn-reset { background: #6b7280; }
+    .btn-reset:hover { background: #4b5563; }
+    .btn-small { background: #b42318; padding: 0; font-size: 12px; margin-left: 0; }
+    .btn-small:hover { background: #912018; }
+    .result-card {
+      background: #ffffff; border: 1px solid #dee5ef; padding: 10px 12px; margin-bottom: 8px;
+      min-height: 95px; box-sizing: border-box; border-radius: 8px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.045);
+    }
+    .result-title { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+    .result-title-wrap { margin-bottom: 8px; }
+    .title-icon { width: 24px; height: 24px; vertical-align: middle; margin-right: 8px; object-fit: cover; border-radius: 4px; }
+    .title-text { display: inline-block; vertical-align: middle; }
+    .result-line { font-size: 14px; margin-bottom: 7px; }
+    .per-area-item { border: 1px solid #dbe2ea; background: #fafcff; padding: 8px; margin-bottom: 6px; border-radius: 6px; }
+    .per-area-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    #perAreaResultsList { max-height: 360px; overflow-y: auto; overflow-x: hidden; padding-right: 4px; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .subtle { color: #374151; font-size: 14px; }
+    .input-note { color: #94a3b8; font-size: 12px; margin-top: 4px; line-height: 1.3; }
+    .source-note {
+      color: #6b7280; font-size: 12px; line-height: 1.45; margin-top: 8px;
+      border-top: 1px solid #e5e7eb; padding-top: 8px;
+    }
+    .foot { clear: both; padding-top: 6px; color: #6b7280; font-size: 12px; text-align: right; }
+    .foot-right { text-align: right; }
+    .result-group { margin-bottom: 10px; }
+    .result-group .result-card:last-child { margin-bottom: 0; }
+
+    @media screen and (max-width: 700px) {
+      h1 { font-size: 24px; }
+      h2 { font-size: 20px; }
+      .left, .right { float: none; width: 100%; }
+      .label, .field { float: none; width: 100%; }
+      .label { line-height: normal; margin-bottom: 8px; padding-right: 0; }
+      .card, .result-card { padding: 12px; }
+      .area-title-inline, .area-main-wrap, .area-main-input, .area-actions, .subarea-count, .btn-subarea, .btn-small,
+      .subarea-label, .subarea-input-wrap, .subarea-input, .subarea-actions, .btn-subremove,
+      .sidewall-count, .sidewall-label, .sidewall-input-wrap, .sidewall-input, .sidewall-actions, .btn-sideremove {
+        float: none; width: 100%; margin-right: 0; margin-bottom: 6px; margin-left: 0;
+      }
+      .area-header-row { display: block; }
+      .area-main-input, .subarea-input, .sidewall-input { height: 32px; }
+      .subarea-count { line-height: normal; width: 100%; }
+      .btn-area-action { width: 100%; height: 30px; line-height: 28px; }
+      .subarea-row { display: block; border-top: 0; padding-top: 0; }
+      .subarea-label, .subarea-input-wrap, .subarea-actions { display: block; width: 100%; padding: 0; }
+      .sidewall-row { display: block; border-top: 0; padding-top: 0; }
+      .sidewall-label, .sidewall-input-wrap, .sidewall-actions { display: block; width: 100%; padding: 0; }
+      .sidewall-controls { text-align: left; }
+      #perAreaResultsList { max-height: none; overflow-y: visible; padding-right: 0; }
+    }
+
+    @media screen and (max-width: 760px) {
+      .wrap { padding: 0 6px; }
+      h1 { font-size: 24px; margin: 4px 0 8px 0; }
+      h2 { font-size: 20px; margin-bottom: 8px; }
+      .btn { margin-left: 4px; padding: 0 10px; font-size: 12px; }
+      .result-title { font-size: 17px; }
+      .title-icon { width: 22px; height: 22px; margin-right: 6px; }
+      .result-line, .subtle { font-size: 14px; }
+      .foot-right { text-align: left; margin-bottom: 4px; }
+    }
+  </style>
+  <script type="text/javascript">
+    var pipeData = {
+      "IPC": {
+        label: "International Plumbing Code",
+        vertical: [
+          { size: 2, gpm: 34 }, { size: 3, gpm: 87 }, { size: 4, gpm: 180 }, { size: 5, gpm: 311 },
+          { size: 6, gpm: 538 }, { size: 8, gpm: 1117 }, { size: 10, gpm: 2050 }, { size: 12, gpm: 3272 }, { size: 15, gpm: 5543 }
+        ],
+        horizontal: {
+          "1/16 in/ft": [{ size: 2, gpm: 15 }, { size: 3, gpm: 39 }, { size: 4, gpm: 81 }, { size: 5, gpm: 117 }, { size: 6, gpm: 243 }, { size: 8, gpm: 505 }, { size: 10, gpm: 927 }, { size: 12, gpm: 1480 }, { size: 15, gpm: 2508 }],
+          "1/8 in/ft":  [{ size: 2, gpm: 22 }, { size: 3, gpm: 55 }, { size: 4, gpm: 115 }, { size: 5, gpm: 165 }, { size: 6, gpm: 344 }, { size: 8, gpm: 714 }, { size: 10, gpm: 1311 }, { size: 12, gpm: 2093 }, { size: 15, gpm: 3546 }],
+          "1/4 in/ft":  [{ size: 2, gpm: 31 }, { size: 3, gpm: 79 }, { size: 4, gpm: 163 }, { size: 5, gpm: 234 }, { size: 6, gpm: 487 }, { size: 8, gpm: 1010 }, { size: 10, gpm: 1855 }, { size: 12, gpm: 2960 }, { size: 15, gpm: 5016 }],
+          "1/2 in/ft":  [{ size: 2, gpm: 44 }, { size: 3, gpm: 111 }, { size: 4, gpm: 231 }, { size: 5, gpm: 331 }, { size: 6, gpm: 689 }, { size: 8, gpm: 1429 }, { size: 10, gpm: 2623 }, { size: 12, gpm: 4187 }, { size: 15, gpm: 7093 }]
+        }
+      },
+      "CPC": {
+        label: "California Plumbing Code",
+        vertical: [
+          { size: 2, gpm: 30 }, { size: 3, gpm: 92 }, { size: 4, gpm: 192 }, { size: 5, gpm: 360 },
+          { size: 6, gpm: 563 }, { size: 8, gpm: 1208 }
+        ],
+        horizontal: {
+          "1/8 in/ft": [{ size: 3, gpm: 34 }, { size: 4, gpm: 78 }, { size: 5, gpm: 139 }, { size: 6, gpm: 222 }, { size: 8, gpm: 478 }, { size: 10, gpm: 860 }, { size: 12, gpm: 1384 }, { size: 15, gpm: 2473 }],
+          "1/4 in/ft": [{ size: 3, gpm: 48 }, { size: 4, gpm: 110 }, { size: 5, gpm: 196 }, { size: 6, gpm: 314 }, { size: 8, gpm: 677 }, { size: 10, gpm: 1214 }, { size: 12, gpm: 1953 }, { size: 15, gpm: 3491 }],
+          "1/2 in/ft": [{ size: 3, gpm: 68 }, { size: 4, gpm: 156 }, { size: 5, gpm: 278 }, { size: 6, gpm: 445 }, { size: 8, gpm: 956 }, { size: 10, gpm: 1721 }, { size: 12, gpm: 2768 }, { size: 15, gpm: 4946 }]
+        }
+      }
+    };
+    var latestPerAreaExport = null;
+
+    function roundNumber(value, digits) {
+      var factor = Math.pow(10, digits);
+      return Math.round(value * factor) / factor;
+    }
+
+    function formatNumber(value, digits) {
+      var n = roundNumber(value, digits);
+      var parts = n.toFixed(digits).split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join('.');
+    }
+
+    function getAreaBlocks() {
+      var container = document.getElementById('areasContainer');
+      var divs, blocks, i;
+      if (!container) return [];
+
+      divs = container.getElementsByTagName('div');
+      blocks = [];
+      for (i = 0; i < divs.length; i++) {
+        if ((' ' + divs[i].className + ' ').indexOf(' area-block ') >= 0) {
+          blocks.push(divs[i]);
+        }
+      }
+      return blocks;
+    }
+
+    function getAreaLabel(index) {
+      if (index < 26) return 'Area ' + String.fromCharCode(65 + index);
+      return 'Area ' + (index + 1);
+    }
+
+    function makeAreaBlock(areaLabel, defaultArea) {
+      var html = '';
+      html += '<div class="area-block">';
+      html += '  <div class="area-header-row">';
+      html += '    <div class="area-title-inline">' + areaLabel + '</div>';
+      html += '    <div class="area-main-wrap"><input type="number" class="area-main-input" placeholder="Area in Square Feet" value="' + defaultArea + '" oninput="recalculate();" onchange="recalculate();" /></div>';
+      html += '    <div class="area-actions">';
+      html += '      <div class="subarea-count">Sub Areas: 0</div>';
+      html += '      <input type="button" class="btn btn-subarea btn-area-action" value="+ Sub Area" onclick="addSubArea(this);" />';
+      html += '      <input type="button" class="btn btn-small btn-area-action" value="Remove" onclick="removeArea(this);" />';
+      html += '    </div>';
+      html += '  </div>';
+      html += '  <div class="field-error area-main-error"></div>';
+      html += '  <div class="subareas-container"></div>';
+      html += '  <div class="sidewall-controls">';
+      html += '    <div class="sidewall-count">Side Walls: 0</div>';
+      html += '    <input type="button" class="btn btn-sidewall btn-area-action" value="+ Side Wall" onclick="addSideWall(this);" />';
+      html += '  </div>';
+      html += '  <div class="sidewalls-container"></div>';
+      html += '  <div class="field-error area-wall-error"></div>';
+      html += '</div>';
+      return html;
+    }
+
+    function makeSubAreaRow() {
+      var html = '';
+      html += '<div class="subarea-row">';
+      html += '  <div class="subarea-label">Sub Area</div>';
+      html += '  <div class="subarea-input-wrap"><input type="number" class="subarea-input" placeholder="Area in Square Feet" value="0" oninput="recalculate();" onchange="recalculate();" /></div>';
+      html += '  <div class="subarea-actions"><input type="button" class="btn btn-subremove btn-area-action" value="Remove Sub" onclick="removeSubArea(this);" /></div>';
+      html += '  <div class="field-error"></div>';
+      html += '</div>';
+      return html;
+    }
+
+    function makeSideWallRow() {
+      var html = '';
+      html += '<div class="sidewall-row">';
+      html += '  <div class="sidewall-label">Side Wall</div>';
+      html += '  <div class="sidewall-input-wrap"><input type="number" class="sidewall-input" placeholder="Side Wall Area (sq ft)" value="0" oninput="recalculate();" onchange="recalculate();" /></div>';
+      html += '  <div class="sidewall-actions"><input type="button" class="btn btn-sideremove btn-area-action" value="Remove Wall" onclick="removeSideWall(this);" /></div>';
+      html += '  <div class="field-error"></div>';
+      html += '</div>';
+      return html;
+    }
+
+    function getSubAreaRows(block) {
+      var divs = block.getElementsByTagName('div');
+      var rows = [];
+      var i;
+      for (i = 0; i < divs.length; i++) {
+        if ((' ' + divs[i].className + ' ').indexOf(' subarea-row ') >= 0) rows.push(divs[i]);
+      }
+      return rows;
+    }
+
+    function getSideWallRows(block) {
+      var divs = block.getElementsByTagName('div');
+      var rows = [];
+      var i;
+      for (i = 0; i < divs.length; i++) {
+        if ((' ' + divs[i].className + ' ').indexOf(' sidewall-row ') >= 0) rows.push(divs[i]);
+      }
+      return rows;
+    }
+
+    function updateSubAreaMetadata(block) {
+      var rows = getSubAreaRows(block);
+      var countNodes = block.getElementsByClassName('subarea-count');
+      var i, labels;
+      for (i = 0; i < rows.length; i++) {
+        labels = rows[i].getElementsByClassName('subarea-label');
+        if (labels.length > 0) labels[0].innerHTML = 'Sub Area ' + (i + 1);
+      }
+      if (countNodes.length > 0) countNodes[0].innerHTML = 'Sub Areas: ' + rows.length;
+    }
+
+    function updateSideWallMetadata(block) {
+      var rows = getSideWallRows(block);
+      var countNodes = block.getElementsByClassName('sidewall-count');
+      var i, labels;
+      for (i = 0; i < rows.length; i++) {
+        labels = rows[i].getElementsByClassName('sidewall-label');
+        if (labels.length > 0) labels[0].innerHTML = 'Side Wall ' + (i + 1);
+      }
+      if (countNodes.length > 0) countNodes[0].innerHTML = 'Side Walls: ' + rows.length;
+    }
+
+    function renumberAreas() {
+      var blocks = getAreaBlocks();
+      var i, titles;
+      for (i = 0; i < blocks.length; i++) {
+        titles = blocks[i].getElementsByClassName('area-title-inline');
+        if (titles.length > 0) titles[0].innerHTML = getAreaLabel(i);
+        updateSubAreaMetadata(blocks[i]);
+        updateSideWallMetadata(blocks[i]);
+      }
+    }
+
+    function addArea() {
+      var count = getAreaBlocks().length;
+      var container = document.getElementById('areasContainer');
+      container.insertAdjacentHTML('beforeend', makeAreaBlock(getAreaLabel(count), 0));
+      renumberAreas();
+      recalculate();
+    }
+
+    function addSubArea(btn) {
+      var block = btn;
+      var container, containers;
+      while (block && (' ' + block.className + ' ').indexOf(' area-block ') < 0) {
+        block = block.parentNode;
+      }
+      if (!block) return;
+      containers = block.getElementsByClassName('subareas-container');
+      if (containers.length <= 0) return;
+      container = containers[0];
+      container.insertAdjacentHTML('beforeend', makeSubAreaRow());
+      updateSubAreaMetadata(block);
+      recalculate();
+    }
+
+    function addSideWall(btn) {
+      var block = btn;
+      var container, containers;
+      while (block && (' ' + block.className + ' ').indexOf(' area-block ') < 0) {
+        block = block.parentNode;
+      }
+      if (!block) return;
+      containers = block.getElementsByClassName('sidewalls-container');
+      if (containers.length <= 0) return;
+      container = containers[0];
+      container.insertAdjacentHTML('beforeend', makeSideWallRow());
+      updateSideWallMetadata(block);
+      recalculate();
+    }
+
+    function removeSubArea(btn) {
+      var row = btn;
+      var block = btn;
+      while (row && (' ' + row.className + ' ').indexOf(' subarea-row ') < 0) {
+        row = row.parentNode;
+      }
+      while (block && (' ' + block.className + ' ').indexOf(' area-block ') < 0) {
+        block = block.parentNode;
+      }
+      if (row && row.parentNode) row.parentNode.removeChild(row);
+      if (block) updateSubAreaMetadata(block);
+      recalculate();
+    }
+
+    function removeSideWall(btn) {
+      var row = btn;
+      var block = btn;
+      while (row && (' ' + row.className + ' ').indexOf(' sidewall-row ') < 0) {
+        row = row.parentNode;
+      }
+      while (block && (' ' + block.className + ' ').indexOf(' area-block ') < 0) {
+        block = block.parentNode;
+      }
+      if (row && row.parentNode) row.parentNode.removeChild(row);
+      if (block) updateSideWallMetadata(block);
+      recalculate();
+    }
+
+    function removeArea(btn) {
+      var blocks = getAreaBlocks();
+      if (blocks.length <= 1) {
+        alert('At least one area is required.');
+        return;
+      }
+      var block = btn;
+      while (block && (' ' + block.className + ' ').indexOf(' area-block ') < 0) {
+        block = block.parentNode;
+      }
+      if (block && block.parentNode) {
+        block.parentNode.removeChild(block);
+        renumberAreas();
+        recalculate();
+      }
+    }
+
+    function pickPipeSizeByArea(requiredArea, rainfallRate, entries) {
+      var i;
+      var factor = rainfallRate * 0.0104;
+      var allowableArea;
+      for (i = 0; i < entries.length; i++) {
+        allowableArea = entries[i].gpm / factor;
+        if (requiredArea <= allowableArea) return entries[i];
+      }
+      return entries[entries.length - 1];
+    }
+
+    function pickPipeSizeWithOverflow(requiredArea, rainfallRate, entries) {
+      var selected = pickPipeSizeByArea(requiredArea, rainfallRate, entries);
+      var maxEntry = entries[entries.length - 1];
+      var maxAllowableArea = maxEntry.gpm / (rainfallRate * 0.0104);
+      return {
+        pipe: selected,
+        exceeded: requiredArea > maxAllowableArea,
+        maxCapacity: maxEntry.gpm,
+        maxAllowableArea: maxAllowableArea
+      };
+    }
+
+    function clearInputError(input, errorMessageNode) {
+      input.className = input.className.replace(/\binput-error\b/g, '').replace(/\s{2,}/g, ' ');
+      if (errorMessageNode) errorMessageNode.innerHTML = '';
+    }
+
+    function showInputError(input, errorMessageNode, message) {
+      if (input.className.indexOf('input-error') < 0) input.className += ' input-error';
+      if (errorMessageNode) errorMessageNode.innerHTML = message;
+    }
+
+    function getFieldErrorNode(block) {
+      var divs = block.getElementsByTagName('div');
+      var i;
+      for (i = 0; i < divs.length; i++) {
+        if (divs[i].className && divs[i].className.indexOf('field-error') >= 0) return divs[i];
+      }
+      return null;
+    }
+
+    function getSideWallFactor(sideWallCount) {
+      if (sideWallCount == 1) return 0.50;
+      if (sideWallCount == 2) return 0.35;
+      if (sideWallCount >= 3) return 0.50;
+      return 0.00;
+    }
+
+    function parseAreasForRunoff(rainfallRate) {
+      var blocks = getAreaBlocks();
+      var i, j, areaInput, areaErrorNode, raw, areaValue, areaLabel;
+      var sideWallRows, sideWallInput, sideWallErrorNode, sideWallRaw, sideWallValue;
+      var subRows, subInput, subErrorNode, subRaw, subValue;
+      var totalArea = 0;
+      var allValid = true;
+      var perArea = [];
+      var roofAreaTotal;
+      var parentArea;
+      var subAreaValues;
+      var effectiveArea;
+      var sideWallAreas;
+      var sideWallSum;
+      var sideWallFactor;
+      var sideWallContribution;
+      var wallErrorNode;
+
+      for (i = 0; i < blocks.length; i++) {
+        roofAreaTotal = 0;
+        parentArea = 0;
+        subAreaValues = [];
+        sideWallAreas = [];
+        sideWallSum = 0;
+        sideWallFactor = 0;
+        sideWallContribution = 0;
+        areaInput = blocks[i].getElementsByClassName('area-main-input')[0];
+        areaErrorNode = blocks[i].getElementsByClassName('area-main-error')[0];
+        wallErrorNode = blocks[i].getElementsByClassName('area-wall-error')[0];
+        if (!areaInput) continue;
+        raw = areaInput.value;
+        clearInputError(areaInput, areaErrorNode);
+        if (wallErrorNode) wallErrorNode.innerHTML = '';
+
+        if (raw === '' || isNaN(parseFloat(raw)) || parseFloat(raw) < 0) {
+          allValid = false;
+          showInputError(areaInput, areaErrorNode, 'Enter an area value of 0 or greater.');
+        } else {
+          areaValue = parseFloat(raw);
+          parentArea = areaValue;
+          roofAreaTotal += areaValue;
+        }
+
+        subRows = getSubAreaRows(blocks[i]);
+        for (j = 0; j < subRows.length; j++) {
+          subInput = subRows[j].getElementsByClassName('subarea-input')[0];
+          subErrorNode = subRows[j].getElementsByClassName('field-error')[0];
+          if (!subInput) continue;
+          subRaw = subInput.value;
+          clearInputError(subInput, subErrorNode);
+          if (subRaw === '' || isNaN(parseFloat(subRaw)) || parseFloat(subRaw) < 0) {
+            allValid = false;
+            showInputError(subInput, subErrorNode, 'Enter a sub-area value of 0 or greater.');
+          } else {
+            subValue = parseFloat(subRaw);
+            subAreaValues.push(subValue);
+            roofAreaTotal += subValue;
+          }
+        }
+
+        sideWallRows = getSideWallRows(blocks[i]);
+        for (j = 0; j < sideWallRows.length; j++) {
+          sideWallInput = sideWallRows[j].getElementsByClassName('sidewall-input')[0];
+          sideWallErrorNode = sideWallRows[j].getElementsByClassName('field-error')[0];
+          if (!sideWallInput) continue;
+          sideWallRaw = sideWallInput.value;
+          clearInputError(sideWallInput, sideWallErrorNode);
+          if (sideWallRaw === '' || isNaN(parseFloat(sideWallRaw)) || parseFloat(sideWallRaw) < 0) {
+            allValid = false;
+            showInputError(sideWallInput, sideWallErrorNode, 'Enter a side wall area of 0 or greater.');
+          } else {
+            sideWallValue = parseFloat(sideWallRaw);
+            sideWallAreas.push(sideWallValue);
+            sideWallSum += sideWallValue;
+          }
+        }
+
+        sideWallFactor = getSideWallFactor(sideWallAreas.length);
+        sideWallContribution = sideWallSum * sideWallFactor;
+        effectiveArea = roofAreaTotal + sideWallContribution;
+        totalArea += effectiveArea;
+        areaLabel = getAreaLabel(i);
+        perArea.push({
+          label: areaLabel,
+          area: effectiveArea,
+          gpm: rainfallRate * effectiveArea * 0.0104,
+          roofArea: roofAreaTotal,
+          sideWallAreas: sideWallAreas,
+          sideWallCount: sideWallAreas.length,
+          sideWallSum: sideWallSum,
+          sideWallFactor: sideWallFactor,
+          sideWallContribution: sideWallContribution,
+          effectiveArea: effectiveArea,
+          parentArea: parentArea,
+          subAreaValues: subAreaValues,
+          subAreaCount: subAreaValues.length
+        });
+      }
+
+      return {
+        isValid: allValid,
+        totalArea: totalArea,
+        perArea: perArea
+      };
+    }
+
+    function renderPerAreaResults(perAreaResults) {
+      var html = '';
+      var i;
+      for (i = 0; i < perAreaResults.length; i++) {
+        html += '<div class="per-area-item">';
+        html += '<div class="per-area-title">' + perAreaResults[i].label + '</div>';
+        html += '<div class="result-line">Main Area: ' + formatNumber(perAreaResults[i].parentArea, 0) + ' sq ft</div>';
+        if (perAreaResults[i].subAreaCount > 0) {
+          html += '<div class="result-line">Sub Areas (' + perAreaResults[i].subAreaCount + '): ' + perAreaResults[i].subAreaListText + ' sq ft</div>';
+        } else {
+          html += '<div class="result-line">Sub Areas (0): None</div>';
+        }
+        html += '<div class="result-line">Total Area: ' + formatNumber(perAreaResults[i].roofArea, 0) + ' sq ft</div>';
+        html += '<div class="result-line">Side Wall Sum: ' + formatNumber(perAreaResults[i].sideWallSum, 0) + ' sq ft</div>';
+        html += '<div class="result-line">Applied Side Wall Factor: ' + formatNumber(perAreaResults[i].sideWallFactor * 100, 0) + '%</div>';
+        html += '<div class="result-line">Side Wall Contribution: ' + formatNumber(perAreaResults[i].sideWallContribution, 0) + ' sq ft</div>';
+        html += '<div class="result-line">Effective Drainage Area: ' + formatNumber(perAreaResults[i].effectiveDrainageArea, 0) + ' sq ft</div>';
+        if (perAreaResults[i].demandMultiplier > 1) {
+          html += '<div class="result-line">Runoff (Base): ' + formatNumber(perAreaResults[i].baseGpm, 2) + ' GPM (' + formatNumber(perAreaResults[i].baseCfs, 3) + ' CFS)</div>';
+          html += '<div class="result-line">Runoff (Effective ' + formatNumber(perAreaResults[i].demandMultiplier, 2) + 'x): ' + formatNumber(perAreaResults[i].effectiveGpm, 2) + ' GPM (' + formatNumber(perAreaResults[i].effectiveCfs, 3) + ' CFS)</div>';
+        } else {
+          html += '<div class="result-line">Runoff: ' + formatNumber(perAreaResults[i].effectiveGpm, 2) + ' GPM (' + formatNumber(perAreaResults[i].effectiveCfs, 3) + ' CFS)</div>';
+        }
+        html += '<div class="result-line">Horizontal Drain Size: ' + perAreaResults[i].horizontal.pipe.size + '"</div>';
+        html += '<div class="result-line">Maximum Horizontal Capacity: ' + formatNumber(perAreaResults[i].horizontal.pipe.gpm, 0) + ' GPM</div>';
+        if (perAreaResults[i].vertical !== null) {
+          html += '<div class="result-line">Vertical Drain Size: ' + perAreaResults[i].vertical.pipe.size + '"</div>';
+          html += '<div class="result-line">Maximum Vertical Capacity: ' + formatNumber(perAreaResults[i].vertical.pipe.gpm, 0) + ' GPM</div>';
+        } else {
+          html += '<div class="result-line">Vertical Drain Size: N/A</div>';
+          html += '<div class="result-line">Maximum Vertical Capacity: N/A</div>';
+        }
+        if (perAreaResults[i].warningText !== '') {
+          html += '<div class="warning-line">' + perAreaResults[i].warningText + '</div>';
+        }
+        html += '</div>';
+      }
+      document.getElementById('perAreaResultsList').innerHTML = html;
+    }
+
+    function clearValidationSummary() {
+      document.getElementById('validationSummary').innerHTML = '';
+      clearInputError(document.getElementById('rainfallRate'), null);
+    }
+
+    function showValidationSummary(message) {
+      document.getElementById('validationSummary').innerHTML = message;
+    }
+
+    function updateSlopeOptions() {
+      var codeBasis = document.getElementById('codeBasis').value;
+      var slopeSelect = document.getElementById('slope');
+      var existing = slopeSelect.value;
+      slopeSelect.options.length = 0;
+
+      var key, opt, j;
+      for (key in pipeData[codeBasis].horizontal) {
+        opt = document.createElement('option');
+        opt.value = key;
+        if (key == "1/16 in/ft") opt.text = '1/16 inch per foot';
+        else if (key == "1/8 in/ft") opt.text = '1/8 inch per foot';
+        else if (key == "1/4 in/ft") opt.text = '1/4 inch per foot';
+        else if (key == "1/2 in/ft") opt.text = '1/2 inch per foot';
+        else opt.text = key;
+        slopeSelect.add(opt);
+      }
+
+      for (j = 0; j < slopeSelect.options.length; j++) {
+        if (slopeSelect.options[j].value == existing) {
+          slopeSelect.selectedIndex = j;
+          return;
+        }
+      }
+      if (slopeSelect.options.length > 0) slopeSelect.selectedIndex = 0;
+    }
+
+    function syncColumnHeights() {
+      return;
+    }
+
+    function getTemplateFilePath() {
+      return 'C:\\Users\\Borhan\\Downloads\\STORM DRAIN CALCULATION\\Per_Area_Results_Template.xlsx';
+    }
+
+    function exportUsingTemplate(snapshot) {
+      var excelApp = null;
+      var workbook = null;
+      var worksheet = null;
+      var defaultName;
+      var savePath;
+      var templatePath = getTemplateFilePath();
+      var fso = null;
+      var i;
+      var row;
+      var drainTypeText;
+      var maxClearRow;
+      var headerTitles;
+
+      try {
+        excelApp = new ActiveXObject('Excel.Application');
+      } catch (e0) {
+        return { ok: false, reason: 'Excel export is unavailable. Please ensure Microsoft Excel is installed and ActiveX automation is enabled.' };
+      }
+
+      try {
+        excelApp.Visible = false;
+        excelApp.DisplayAlerts = false;
+        defaultName = 'Per_Area_Results_' + (new Date().getFullYear()) + '.xlsx';
+        savePath = excelApp.GetSaveAsFilename(defaultName, 'Excel Workbook (*.xlsx), *.xlsx');
+        if (savePath === false || savePath === null || savePath === '') {
+          excelApp.Quit();
+          return { ok: false, cancelled: true, reason: 'Export cancelled.' };
+        }
+        if (savePath.toLowerCase().indexOf('.xlsx') < 0) savePath += '.xlsx';
+
+        fso = new ActiveXObject('Scripting.FileSystemObject');
+        if (!fso.FileExists(templatePath)) {
+          excelApp.Quit();
+          return { ok: false, reason: 'Template file was not found at: ' + templatePath };
+        }
+        if (fso.FileExists(savePath)) {
+          fso.DeleteFile(savePath, true);
+        }
+        fso.CopyFile(templatePath, savePath, true);
+
+        workbook = excelApp.Workbooks.Open(savePath, false, false);
+        worksheet = workbook.Worksheets(1);
+        drainTypeText = snapshot.drainTypeLabel;
+        if (snapshot.demandMultiplier !== '1.00x') drainTypeText += ' (' + snapshot.demandMultiplier + ')';
+
+        worksheet.Cells(2, 2).Value = snapshot.codeBasisLabel;
+        worksheet.Cells(3, 1).Value = snapshot.codeBasisLabel;
+        worksheet.Cells(3, 2).Value = snapshot.slopeLabel;
+        worksheet.Cells(3, 3).Value = parseFloat(snapshot.rainfallRate);
+        worksheet.Cells(3, 4).Value = drainTypeText;
+
+        headerTitles = [
+          'Area',
+          'Parent Area (sq ft)',
+          'Sub-Areas (sq ft)',
+          'Roof Area (sq ft)',
+          'Side Wall Areas (sq ft)',
+          'Side Wall Contribution (sq ft)',
+          'Effective Drainage Area (sq ft)',
+          'Effective Runoff (GPM)',
+          'Effective Runoff (CFS)',
+          'Horizontal Drain Size (in)',
+          'Maximum Horizontal Capacity (GPM)',
+          'Vertical Drain Size (in)',
+          'Maximum Vertical Capacity (GPM)'
+        ];
+        for (i = 0; i < headerTitles.length; i++) {
+          worksheet.Cells(5, i + 1).Value = headerTitles[i];
+        }
+
+        maxClearRow = Math.max(worksheet.UsedRange.Rows.Count + 10, 1000);
+        worksheet.Range('A6:M' + maxClearRow).ClearContents();
+
+        for (i = 0; i < snapshot.rows.length; i++) {
+          row = 6 + i;
+          worksheet.Cells(row, 1).Value = snapshot.rows[i].label;
+          worksheet.Cells(row, 2).Value = snapshot.rows[i].parentArea;
+          worksheet.Cells(row, 3).Value = snapshot.rows[i].subAreaListText;
+          worksheet.Cells(row, 4).Value = snapshot.rows[i].roofArea;
+          worksheet.Cells(row, 5).Value = snapshot.rows[i].sideWallAreasText;
+          worksheet.Cells(row, 6).Value = snapshot.rows[i].sideWallContribution;
+          worksheet.Cells(row, 7).Value = snapshot.rows[i].area;
+          worksheet.Cells(row, 8).Value = snapshot.rows[i].effectiveGpm;
+          worksheet.Cells(row, 9).Value = snapshot.rows[i].effectiveCfs;
+          worksheet.Cells(row, 10).Value = snapshot.rows[i].horizontalSize;
+          worksheet.Cells(row, 11).Value = snapshot.rows[i].horizontalCapacity;
+          worksheet.Cells(row, 12).Value = snapshot.rows[i].verticalSize;
+          worksheet.Cells(row, 13).Value = snapshot.rows[i].verticalCapacity;
+        }
+
+        worksheet.Range('B6:B' + maxClearRow).NumberFormat = '#,##0';
+        worksheet.Range('D6:D' + maxClearRow).NumberFormat = '#,##0';
+        worksheet.Range('F6:G' + maxClearRow).NumberFormat = '#,##0';
+        worksheet.Range('H6:H' + maxClearRow).NumberFormat = '#,##0.00';
+        worksheet.Range('I6:I' + maxClearRow).NumberFormat = '0.000';
+        worksheet.Range('K6:K' + maxClearRow).NumberFormat = '#,##0';
+        worksheet.Range('M6:M' + maxClearRow).NumberFormat = '#,##0';
+
+        workbook.Save();
+        workbook.Close(true);
+        excelApp.Quit();
+        return { ok: true, rowCount: snapshot.rows.length, exportedAt: (new Date()).toLocaleString() };
+      } catch (e1) {
+        try { if (workbook) workbook.Close(false); } catch (e2) {}
+        try { if (excelApp) excelApp.Quit(); } catch (e3) {}
+        return { ok: false, reason: 'Template export failed: ' + (e1.message || 'Unknown error') };
+      }
+    }
+
+    function exportStandardExcel(snapshot) {
+      var excelApp = null;
+      var workbook = null;
+      var worksheet = null;
+      var startRow = 10;
+      var columns;
+      var i;
+      var rowIndex;
+      var savePath;
+      var defaultName;
+      var tableRange;
+      var tableObject;
+
+      columns = [
+        'Area',
+        'Main Area (sq ft)',
+        'Sub-Areas (sq ft)',
+        'Roof Area (sq ft)',
+        'Side Wall Areas (sq ft)',
+        'Side Wall Contribution (sq ft)',
+        'Effective Drainage Area (sq ft)',
+        'Effective Runoff (GPM)',
+        'Effective Runoff (CFS)',
+        'Horizontal Drain Size (in)',
+        'Maximum Horizontal Capacity (GPM)',
+        'Vertical Drain Size (in)',
+        'Maximum Vertical Capacity (GPM)'
+      ];
+
+      try {
+        excelApp = new ActiveXObject('Excel.Application');
+      } catch (e1) {
+        return { ok: false, reason: 'Excel export is unavailable. Please ensure Microsoft Excel is installed and ActiveX automation is enabled.' };
+      }
+
+      try {
+        excelApp.Visible = false;
+        excelApp.DisplayAlerts = false;
+        workbook = excelApp.Workbooks.Add();
+        worksheet = workbook.Worksheets(1);
+        worksheet.Name = 'Per-Area Results';
+
+        worksheet.Cells(1, 1).Value = 'Per-Area Results Export';
+        worksheet.Cells(2, 1).Value = 'Code Basis';
+        worksheet.Cells(2, 2).Value = snapshot.codeBasisLabel;
+        worksheet.Cells(3, 1).Value = 'Horizontal Drain Slope';
+        worksheet.Cells(3, 2).Value = snapshot.slopeLabel;
+        worksheet.Cells(4, 1).Value = 'Rainfall Rate (in/hr)';
+        worksheet.Cells(4, 2).Value = snapshot.rainfallRate;
+        worksheet.Cells(5, 1).Value = 'Drain Type';
+        worksheet.Cells(5, 2).Value = snapshot.drainTypeLabel;
+        worksheet.Cells(6, 1).Value = 'Demand Multiplier';
+        worksheet.Cells(6, 2).Value = snapshot.demandMultiplier;
+        worksheet.Cells(7, 1).Value = 'Calculated At';
+        worksheet.Cells(7, 2).Value = snapshot.calculatedAt;
+        worksheet.Cells(8, 1).Value = 'Exported At';
+        worksheet.Cells(8, 2).Value = (new Date()).toLocaleString();
+
+        for (i = 0; i < columns.length; i++) {
+          worksheet.Cells(startRow, i + 1).Value = columns[i];
+        }
+
+        for (i = 0; i < snapshot.rows.length; i++) {
+          rowIndex = startRow + i + 1;
+          worksheet.Cells(rowIndex, 1).Value = snapshot.rows[i].label;
+          worksheet.Cells(rowIndex, 2).Value = snapshot.rows[i].parentArea;
+          worksheet.Cells(rowIndex, 3).Value = snapshot.rows[i].subAreaListText;
+          worksheet.Cells(rowIndex, 4).Value = snapshot.rows[i].roofArea;
+          worksheet.Cells(rowIndex, 5).Value = snapshot.rows[i].sideWallAreasText;
+          worksheet.Cells(rowIndex, 6).Value = snapshot.rows[i].sideWallContribution;
+          worksheet.Cells(rowIndex, 7).Value = snapshot.rows[i].area;
+          worksheet.Cells(rowIndex, 8).Value = snapshot.rows[i].effectiveGpm;
+          worksheet.Cells(rowIndex, 9).Value = snapshot.rows[i].effectiveCfs;
+          worksheet.Cells(rowIndex, 10).Value = snapshot.rows[i].horizontalSize;
+          worksheet.Cells(rowIndex, 11).Value = snapshot.rows[i].horizontalCapacity;
+          worksheet.Cells(rowIndex, 12).Value = snapshot.rows[i].verticalSize;
+          worksheet.Cells(rowIndex, 13).Value = snapshot.rows[i].verticalCapacity;
+        }
+
+        worksheet.Range('B:B').NumberFormat = '#,##0';
+        worksheet.Range('D:D').NumberFormat = '#,##0';
+        worksheet.Range('F:G').NumberFormat = '#,##0';
+        worksheet.Range('H:H').NumberFormat = '#,##0.00';
+        worksheet.Range('I:I').NumberFormat = '0.000';
+        worksheet.Range('K:K').NumberFormat = '#,##0';
+        worksheet.Range('M:M').NumberFormat = '#,##0';
+
+        tableRange = worksheet.Range(worksheet.Cells(startRow, 1), worksheet.Cells(startRow + snapshot.rows.length, columns.length));
+        tableObject = worksheet.ListObjects.Add(1, tableRange, null, 1);
+        tableObject.Name = 'PerAreaResultsTable';
+        tableObject.TableStyle = 'TableStyleMedium2';
+        worksheet.Columns('A:M').AutoFit();
+
+        defaultName = 'Per_Area_Results_' + (new Date().getFullYear()) + '.xlsx';
+        savePath = excelApp.GetSaveAsFilename(defaultName, 'Excel Workbook (*.xlsx), *.xlsx');
+        if (savePath === false || savePath === null || savePath === '') {
+          workbook.Close(false);
+          excelApp.Quit();
+          return { ok: false, cancelled: true, reason: 'Export cancelled.' };
+        }
+        if (savePath.toLowerCase().indexOf('.xlsx') < 0) savePath += '.xlsx';
+
+        workbook.SaveAs(savePath, 51);
+        workbook.Close(false);
+        excelApp.Quit();
+        return { ok: true, rowCount: snapshot.rows.length, exportedAt: (new Date()).toLocaleString() };
+      } catch (e2) {
+        try { if (workbook) workbook.Close(false); } catch (e3) {}
+        try { if (excelApp) excelApp.Quit(); } catch (e4) {}
+        return { ok: false, reason: 'Standard Excel export failed. Please try again.' };
+      }
+    }
+
+    function exportPerAreaToExcel() {
+      var snapshot = latestPerAreaExport;
+      var templateResult;
+      if (!snapshot || !snapshot.rows || snapshot.rows.length <= 0) {
+        alert('No valid per-area results are available to export yet. Please calculate first.');
+        return;
+      }
+
+      templateResult = exportUsingTemplate(snapshot);
+      if (templateResult.ok) {
+        alert('Per-Area Results exported from template successfully. Rows: ' + templateResult.rowCount + '. Exported at: ' + templateResult.exportedAt);
+        return;
+      }
+      if (templateResult.cancelled) return;
+      alert('Template export failed.\n' + templateResult.reason);
+    }
+
+    function enforceStartupWindowSize() {
+      var targetWidth, targetHeight, left;
+      var top;
+      var minWidth = 760;
+      var minHeight = 620;
+      try {
+        targetWidth = Math.floor(screen.availWidth * 0.46);
+        if (targetWidth < minWidth) targetWidth = minWidth;
+        targetHeight = Math.floor(screen.availHeight * 0.86);
+        if (targetHeight < minHeight) targetHeight = minHeight;
+        window.resizeTo(targetWidth, targetHeight);
+        left = Math.floor((screen.availWidth - targetWidth) / 2);
+        top = Math.floor((screen.availHeight - targetHeight) / 2);
+        if (left < 0) left = 0;
+        if (top < 0) top = 0;
+        window.moveTo(left, top);
+      } catch (e) {}
+    }
+
+    function recalculate() {
+      var rainfallInput = document.getElementById('rainfallRate');
+      var rainfallRate = parseFloat(document.getElementById('rainfallRate').value);
+      var drainType = document.getElementById('drainType').value;
+      var drainTypeLabel = document.getElementById('drainType').options[document.getElementById('drainType').selectedIndex].text;
+      var demandMultiplier = (drainType == 'COMBINED') ? 2.00 : 1.00;
+      var areaData;
+      var totalArea;
+      var gpmBase;
+      var cfsBase;
+      var gpmEffective;
+      var cfsEffective;
+      var areaResultRows = [];
+      var i, areaEntry, horizontalResult, verticalResult, warningText, effectiveAreaForSizing;
+      var slopeSelect = document.getElementById('slope');
+      var slopeLabel = '';
+      var subAreaText = '';
+
+      clearValidationSummary();
+
+      if (rainfallInput.value === '' || isNaN(rainfallRate) || rainfallRate <= 0) {
+        showInputError(rainfallInput, null, '');
+        showValidationSummary('Enter a rainfall rate greater than zero to calculate results.');
+        return;
+      }
+
+      areaData = parseAreasForRunoff(rainfallRate);
+      if (!areaData.isValid) {
+        showValidationSummary('Fix highlighted area values before calculating.');
+        return;
+      }
+      totalArea = areaData.totalArea;
+      var codeBasis = document.getElementById('codeBasis').value;
+      var slope = document.getElementById('slope').value;
+      var data = pipeData[codeBasis];
+      if (slopeSelect && slopeSelect.selectedIndex >= 0) slopeLabel = slopeSelect.options[slopeSelect.selectedIndex].text;
+      else slopeLabel = slope;
+
+      gpmBase = rainfallRate * totalArea * 0.0104;
+      cfsBase = gpmBase / 448.831;
+      gpmEffective = gpmBase * demandMultiplier;
+      cfsEffective = gpmEffective / 448.831;
+
+      for (i = 0; i < areaData.perArea.length; i++) {
+        areaEntry = areaData.perArea[i];
+        effectiveAreaForSizing = areaEntry.area * demandMultiplier;
+        horizontalResult = pickPipeSizeWithOverflow(effectiveAreaForSizing, rainfallRate, data.horizontal[slope]);
+        verticalResult = null;
+        warningText = '';
+        if (data.vertical.length > 0) verticalResult = pickPipeSizeWithOverflow(effectiveAreaForSizing, rainfallRate, data.vertical);
+        if (horizontalResult.exceeded) {
+          warningText += 'Effective area exceeds horizontal table limit (' + formatNumber(horizontalResult.maxAllowableArea, 0) + ' sq ft max). ';
+        }
+        if (verticalResult !== null && verticalResult.exceeded) {
+          warningText += 'Effective area exceeds vertical table limit (' + formatNumber(verticalResult.maxAllowableArea, 0) + ' sq ft max).';
+        }
+        subAreaText = (areaEntry.subAreaCount > 0) ? areaEntry.subAreaValues.join(', ') : 'None';
+        areaResultRows.push({
+          label: areaEntry.label,
+          area: areaEntry.area,
+          roofArea: areaEntry.roofArea,
+          sideWallAreas: areaEntry.sideWallAreas,
+          sideWallCount: areaEntry.sideWallCount,
+          sideWallSum: areaEntry.sideWallSum,
+          sideWallFactor: areaEntry.sideWallFactor,
+          sideWallContribution: areaEntry.sideWallContribution,
+          effectiveDrainageArea: areaEntry.effectiveArea,
+          parentArea: areaEntry.parentArea,
+          subAreaCount: areaEntry.subAreaCount,
+          subAreaValues: areaEntry.subAreaValues,
+          subAreaListText: subAreaText,
+          baseGpm: areaEntry.gpm,
+          baseCfs: areaEntry.gpm / 448.831,
+          effectiveGpm: areaEntry.gpm * demandMultiplier,
+          effectiveCfs: (areaEntry.gpm * demandMultiplier) / 448.831,
+          effectiveArea: effectiveAreaForSizing,
+          demandMultiplier: demandMultiplier,
+          horizontal: horizontalResult,
+          vertical: verticalResult,
+          warningText: warningText
+        });
+      }
+
+      document.getElementById('selectedCodeText').innerHTML = data.label;
+      document.getElementById('drainTypeDisplay').innerHTML = drainTypeLabel;
+      document.getElementById('rainfallDisplay').innerHTML = formatNumber(rainfallRate, 2) + ' inches per Hour';
+      document.getElementById('totalAreaResult').innerHTML = formatNumber(totalArea, 0) + ' sq ft';
+      if (demandMultiplier > 1) {
+        document.getElementById('gpmText').innerHTML = 'Base: ' + formatNumber(gpmBase, 2) + ' GPM | Effective (' + formatNumber(demandMultiplier, 2) + 'x): ' + formatNumber(gpmEffective, 2) + ' GPM';
+        document.getElementById('cfsText').innerHTML = 'Base: ' + formatNumber(cfsBase, 3) + ' CFS | Effective: ' + formatNumber(cfsEffective, 3) + ' CFS';
+      } else {
+        document.getElementById('gpmText').innerHTML = formatNumber(gpmEffective, 2) + ' Gallons per Minute (GPM)';
+        document.getElementById('cfsText').innerHTML = formatNumber(cfsEffective, 3) + ' Cubic Feet per Second (CFS)';
+      }
+      renderPerAreaResults(areaResultRows);
+      latestPerAreaExport = {
+        codeBasisLabel: data.label,
+        slopeLabel: slopeLabel,
+        rainfallRate: formatNumber(rainfallRate, 2),
+        drainTypeLabel: drainTypeLabel,
+        demandMultiplier: formatNumber(demandMultiplier, 2) + 'x',
+        calculatedAt: (new Date()).toLocaleString(),
+        rows: []
+      };
+      for (i = 0; i < areaResultRows.length; i++) {
+        latestPerAreaExport.rows.push({
+          label: areaResultRows[i].label,
+          parentArea: roundNumber(areaResultRows[i].parentArea, 0),
+          subAreaCount: areaResultRows[i].subAreaCount,
+          subAreaListText: areaResultRows[i].subAreaListText,
+          roofArea: roundNumber(areaResultRows[i].roofArea, 0),
+          sideWallCount: areaResultRows[i].sideWallCount,
+          sideWallAreasText: (areaResultRows[i].sideWallCount > 0 ? areaResultRows[i].sideWallAreas.join(', ') : 'None'),
+          sideWallSum: roundNumber(areaResultRows[i].sideWallSum, 0),
+          sideWallFactorPercent: roundNumber(areaResultRows[i].sideWallFactor * 100, 0),
+          sideWallContribution: roundNumber(areaResultRows[i].sideWallContribution, 0),
+          area: roundNumber(areaResultRows[i].area, 0),
+          effectiveArea: roundNumber(areaResultRows[i].effectiveArea, 0),
+          baseGpm: roundNumber(areaResultRows[i].baseGpm, 2),
+          effectiveGpm: roundNumber(areaResultRows[i].effectiveGpm, 2),
+          effectiveCfs: roundNumber(areaResultRows[i].effectiveCfs, 3),
+          horizontalSize: areaResultRows[i].horizontal.pipe.size,
+          horizontalCapacity: roundNumber(areaResultRows[i].horizontal.pipe.gpm, 0),
+          verticalSize: areaResultRows[i].vertical !== null ? areaResultRows[i].vertical.pipe.size : 'N/A',
+          verticalCapacity: areaResultRows[i].vertical !== null ? roundNumber(areaResultRows[i].vertical.pipe.gpm, 0) : 'N/A',
+          warningText: areaResultRows[i].warningText
+        });
+      }
+      if (codeBasis == "IPC") {
+        document.getElementById('basisNote').innerHTML = 'IPC per-area results are based on the vertical and horizontal GPM tables.';
+      } else {
+        document.getElementById('basisNote').innerHTML = 'CPC per-area results are based on the California vertical table and the California horizontal table you provided.';
+      }
+      if (demandMultiplier > 1) {
+        document.getElementById('basisNote').innerHTML += ' Combined Storm mode applies a ' + formatNumber(demandMultiplier, 2) + 'x demand multiplier for sizing.';
+      }
+    }
+
+    function resetResults() {
+      document.getElementById('selectedCodeText').innerHTML = '';
+      document.getElementById('drainTypeDisplay').innerHTML = '';
+      document.getElementById('rainfallDisplay').innerHTML = '';
+      document.getElementById('totalAreaResult').innerHTML = '';
+      document.getElementById('gpmText').innerHTML = '';
+      document.getElementById('cfsText').innerHTML = '';
+      document.getElementById('perAreaResultsList').innerHTML = '';
+      document.getElementById('basisNote').innerHTML = '';
+      latestPerAreaExport = null;
+      clearValidationSummary();
+    }
+
+    function resetForm() {
+      document.getElementById('areasContainer').innerHTML = makeAreaBlock(getAreaLabel(0), 0);
+      document.getElementById('codeBasis').value = 'IPC';
+      document.getElementById('drainType').value = 'PRIMARY';
+      document.getElementById('rainfallRate').value = '1.00';
+      updateSlopeOptions();
+      document.getElementById('slope').value = '1/8 in/ft';
+      resetResults();
+      recalculate();
+    }
+
+    function initPage() {
+      enforceStartupWindowSize();
+      resetForm();
+    }
+  </script>
+</head>
+<body onload="initPage();">
+  <div class="wrap">
+    <h1>Storm Drain Pipe Sizing Calculator</h1>
+
+    <div class="grid">
+      <div class="left">
+        <div class="card" id="leftRow1">
+          <div id="areasContainer"></div>
+          <div style="text-align:right;">
+            <input type="button" class="btn" value="+ ADD AREA" onclick="addArea();" />
+          </div>
+        </div>
+
+        <div class="card" id="leftRow2">
+          <div class="row">
+            <div class="label">Code Basis</div>
+            <div class="field">
+              <select id="codeBasis" onchange="updateSlopeOptions(); recalculate();">
+                <option value="IPC" selected="selected">International Plumbing Code (IPC)</option>
+                <option value="CPC">California Plumbing Code (CPC)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="label">Horizontal Drain Slope</div>
+            <div class="field">
+              <select id="slope" onchange="recalculate();"></select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="label">Rainfall Rate (in/hr)</div>
+            <div class="field">
+              <input type="number" step="0.01" id="rainfallRate" value="1.00" oninput="recalculate();" onchange="recalculate();" />
+              <div class="input-note">Manual rainfall entry supports values like 1.5, 1.8, or any other custom rate.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="label">Drain Type</div>
+            <div class="field">
+              <select id="drainType" onchange="recalculate();">
+                <option value="PRIMARY" selected="selected">Primary Roof Drain System</option>
+                <option value="PRIMARY_SECONDARY">Primary + Secondary (Emergency Overflow) System</option>
+                <option value="COMBINED">Combined Storm System</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="validationSummary" class="validation-summary"></div>
+
+          <div style="text-align:right;">
+            <input type="button" class="btn" value="EXPORT TO EXCEL" onclick="exportPerAreaToExcel();" />
+            <input type="button" class="btn btn-reset" value="RESET" onclick="resetForm();" />
+            <input type="button" class="btn btn-secondary" value="CALCULATE" onclick="recalculate();" />
+          </div>
+          <div class="source-note">
+            IPC data is based on the Table 1106.2 image you sent. CPC horizontal data is based on the California table you sent first, and CPC vertical data is based on the Table 1103.1 image you just sent.
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <h2>Results</h2>
+
+        <div class="result-group" id="rightRow1">
+          <div class="result-card">
+            <div class="result-title result-title-wrap">
+              <img class="title-icon" alt="Selected Basis Icon" src="338106.png" onerror="this.onerror=null; this.src='4003667.png';" />
+              <span class="title-text">Selected Basis</span>
+            </div>
+            <div class="result-line" id="selectedCodeText"></div>
+            <div class="result-line" id="drainTypeDisplay"></div>
+            <div class="result-line" id="rainfallDisplay"></div>
+            <span id="totalAreaResult" style="display:none;"></span>
+          </div>
+
+          <div class="result-card">
+            <div class="result-title result-title-wrap">
+              <img class="title-icon" alt="Runoff Icon" src="runoff-icon.png" onerror="this.onerror=null; this.src='338106.png';" />
+              <span class="title-text">Runoff</span>
+            </div>
+            <div class="result-line" id="gpmText"></div>
+            <div class="result-line" id="cfsText"></div>
+          </div>
+        </div>
+
+        <div class="result-group" id="rightRow2">
+          <div class="result-card">
+            <div class="result-title result-title-wrap">
+              <img class="title-icon" alt="Per-Area Results Icon" src="piping.jpg" onerror="this.onerror=null; this.src='338106.png';" />
+              <span class="title-text">Per-Area Results</span>
+            </div>
+            <div id="perAreaResultsList"></div>
+            <div class="muted" id="basisNote"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="foot-right">Designed by: Borhan Torkfar</div>
+    </div>
+  </div>
+</body>
+</html>

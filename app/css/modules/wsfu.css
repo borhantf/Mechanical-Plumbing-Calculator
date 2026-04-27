@@ -1,0 +1,258 @@
+/* module styles: wsfu.css */
+
+#wsfuScreen .card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#wsfuScreen .row {
+  margin-bottom: 6px;
+}
+
+#wsfuScreen .manager-box {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding: 8px;
+}
+
+#wsfuScreen .manager-title {
+  margin-bottom: 6px;
+}
+
+#wsfuScreen .wsfu-fixture-actions {
+  text-align: right;
+  margin-top: 4px;
+}
+
+#wsfuScreen .wsfu-add-fixture-btn {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 11px;
+  background: #edf3ff;
+  color: #234c86;
+  border: 1px solid #bfd2ef;
+}
+
+#wsfuScreen .wsfu-add-fixture-btn:hover {
+  background: #e3ecfb;
+}
+
+#wsfuScreen .wsfu-fixture-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+#wsfuScreen .wsfu-fixture-table th {
+  text-align: left;
+  padding: 5px 4px;
+  border-bottom: 1px solid #c5cedd;
+  color: #2a446b;
+  font-weight: 600;
+  background: #f6f9ff;
+}
+
+#wsfuScreen .wsfu-fixture-table th.num,
+#wsfuScreen .wsfu-fixture-table td.num {
+  text-align: right;
+}
+
+#wsfuScreen .wsfu-fixture-table th.center,
+#wsfuScreen .wsfu-fixture-table td.center {
+  text-align: center;
+}
+
+#wsfuScreen .wsfu-fixture-table td {
+  padding: 4px 5px;
+  border-bottom: 1px solid #e8edf6;
+  vertical-align: middle;
+}
+
+#wsfuScreen .wsfu-fixture-select {
+  width: 100%;
+  min-height: 30px;
+}
+
+#wsfuScreen .wsfu-qty-input {
+  width: 74px;
+  text-align: right;
+  min-height: 30px;
+}
+
+#wsfuScreen .wsfu-hotcold-checkbox {
+  width: 16px;
+  height: 16px;
+}
+
+#wsfuScreen .wsfu-cell-metric {
+  font-variant-numeric: tabular-nums;
+  color: #173a66;
+}
+
+#wsfuScreen .wsfu-remove-btn {
+  height: 26px;
+  padding: 0 8px;
+  font-size: 11px;
+  background: #fff4f4;
+  color: #8f1f1f;
+  border-color: #e4b5b5;
+  box-shadow: none;
+}
+
+#wsfuScreen .wsfu-remove-btn:hover {
+  background: #fde8e8;
+  border-color: #da9b9b;
+  color: #7d1b1b;
+  box-shadow: 0 1px 3px rgba(153, 27, 27, 0.15);
+}
+
+#wsfuScreen .wsfu-remove-btn:active {
+  background: #fadede;
+  border-color: #cf8f8f;
+  transform: translateY(1px);
+}
+
+#wsfuScreen .wsfu-totals-box {
+  margin-top: 6px;
+}
+
+#wsfuScreen .wsfu-compact-row {
+  margin-bottom: 4px;
+}
+
+#wsfuScreen .wsfu-checkbox {
+  width: auto;
+  height: auto;
+  margin-top: 6px;
+}
+
+#wsfuScreen #wsfuPreview {
+  margin-top: 4px;
+}
+
+#wsfuScreen .wsfu-actions {
+  text-align: right;
+  margin-top: 6px;
+}
+
+#wsfuScreen .result-card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#wsfuScreen .wsfu-results-section {
+  margin-bottom: 8px;
+}
+
+#wsfuScreen .wsfu-results-subtitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1d3f70;
+  margin-bottom: 5px;
+}
+
+#wsfuScreen .wsfu-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+#wsfuScreen .wsfu-result-item {
+  border: 1px solid #d8e4f5;
+  border-radius: 8px;
+  background: #f9fbff;
+  padding: 6px 8px;
+}
+
+#wsfuScreen .wsfu-result-label {
+  display: block;
+  font-size: 10px;
+  color: #567192;
+  margin-bottom: 2px;
+}
+
+#wsfuScreen .wsfu-result-value {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #173a66;
+  line-height: 1.2;
+}
+
+#wsfuScreen .wsfu-selected-size {
+  margin-top: 6px;
+  border: 1px solid #c7d9f3;
+  border-radius: 9px;
+  background: #eef5ff;
+  padding: 6px 8px;
+}
+
+#wsfuScreen .wsfu-selected-size-label {
+  display: block;
+  font-size: 10px;
+  color: #4d6689;
+}
+
+#wsfuScreen .wsfu-selected-size-value {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: #113861;
+  line-height: 1.05;
+}
+
+#wsfuScreen .wsfu-selected-size-note {
+  display: block;
+  font-size: 11px;
+  color: #466281;
+}
+
+#wsfuScreen .wsfu-friction-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+#wsfuScreen .wsfu-friction-table th {
+  text-align: left;
+  background: #f1f6ff;
+  border-bottom: 1px solid #c8d7ec;
+  padding: 5px 4px;
+  color: #2a446b;
+  font-weight: 600;
+}
+
+#wsfuScreen .wsfu-friction-table th.num,
+#wsfuScreen .wsfu-friction-table td.num {
+  text-align: right;
+}
+
+#wsfuScreen .wsfu-friction-table td {
+  padding: 4px;
+  border-bottom: 1px solid #e5ecf7;
+}
+
+#wsfuScreen .wsfu-friction-table tbody tr:nth-child(even) {
+  background: #fafcff;
+}
+
+#wsfuScreen .wsfu-friction-table tr.wsfu-friction-best {
+  background: #eaf3ff;
+  font-weight: 700;
+}
+
+#wsfuScreen .wsfu-result-source {
+  margin-top: 2px;
+}
+
+@media screen and (max-width: 900px) {
+  #wsfuScreen .wsfu-results-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  #wsfuScreen .wsfu-results-grid {
+    grid-template-columns: 1fr;
+  }
+}

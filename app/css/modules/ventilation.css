@@ -1,0 +1,499 @@
+#ventilationScreen .ventilation-grid {
+  gap: 7px;
+}
+
+#ventilationScreen .card,
+#ventilationScreen .result-card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#ventilationScreen .ventilation-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #27466f;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.18px;
+}
+
+#ventilationScreen .ventilation-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 8px;
+}
+
+#ventilationScreen .ventilation-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#ventilationScreen .ventilation-field label {
+  font-size: 11px;
+  color: #5b6f89;
+  font-weight: 650;
+}
+
+#ventilationScreen .ventilation-field.is-muted label {
+  color: #7b8da5;
+}
+
+#ventilationScreen .ventilation-field.is-muted input {
+  background: #f4f7fb;
+  color: #73879f;
+}
+
+#ventilationScreen .ventilation-divider {
+  border-top: 1px solid #e5edf7;
+  margin: 6px 0;
+}
+
+#ventilationScreen .ventilation-preset-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+#ventilationScreen .ventilation-preset-row-inline {
+  margin-top: 1px;
+}
+
+#ventilationScreen .ventilation-preset-row .btn {
+  margin: 0;
+  height: 24px;
+  line-height: 22px;
+  padding: 0 8px;
+  font-size: 10px;
+}
+
+#ventilationScreen .ventilation-preset-row .cond-secondary-btn {
+  background: #eef8f0;
+  border-color: #b8ddbf;
+  color: #276137;
+}
+
+#ventilationScreen .ventilation-preset-row .cond-secondary-btn:hover {
+  background: #e1f2e5;
+  border-color: #93cfa1;
+  color: #1f552e;
+}
+
+#ventilationScreen .ventilation-preset-label {
+  font-size: 10px;
+  color: #4d647f;
+  font-weight: 700;
+  margin-right: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+#ventilationScreen .ventilation-field-span2 {
+  grid-column: 1 / -1;
+}
+
+#ventilationScreen .ventilation-table-values-card {
+  border: 1px solid #dbe6f3;
+  border-radius: 9px;
+  background: #ffffff;
+  padding: 7px;
+  margin-top: 6px;
+}
+
+#ventilationScreen .ventilation-side-preview-card {
+  margin-top: 7px;
+}
+
+#ventilationScreen .ventilation-card-group {
+  border: 1px solid #e1eaf5;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 6px 7px;
+}
+
+#ventilationScreen .ventilation-card-group + .ventilation-card-group {
+  margin-top: 6px;
+}
+
+#ventilationScreen .ventilation-table-values-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 650;
+  color: #2a466a;
+  margin-bottom: 4px;
+}
+
+#ventilationScreen .ventilation-code-badge {
+  border: 1px solid #cfddf1;
+  background: #eef5ff;
+  color: #375b86;
+  border-radius: 999px;
+  padding: 2px 7px;
+  font-size: 10px;
+}
+
+#ventilationScreen .ventilation-table-values-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+#ventilationScreen .ventilation-preview-head {
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #2a466a;
+}
+
+#ventilationScreen .ventilation-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 8px;
+}
+
+#ventilationScreen .ventilation-preview-grid .k {
+  display: block;
+  font-size: 10px;
+  color: #607793;
+  font-weight: 650;
+}
+
+#ventilationScreen .ventilation-preview-grid .v {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #193f6a;
+  font-weight: 720;
+}
+
+#ventilationScreen .ventilation-status-pill {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  min-height: 18px;
+  border-radius: 999px;
+  padding: 1px 7px;
+  border: 1px solid #cfdbea;
+  background: #f3f6fa;
+  color: #52657e;
+}
+
+#ventilationScreen .ventilation-status-pill.status-ok {
+  border-color: #b9dcc6;
+  background: #eaf6ee;
+  color: #1e6a3b;
+}
+
+#ventilationScreen .ventilation-status-pill.status-under {
+  border-color: #efc1c1;
+  background: #fdecec;
+  color: #8b2e2e;
+}
+
+#ventilationScreen .ventilation-table-values-grid .k {
+  display: block;
+  font-size: 10px;
+  color: #607793;
+  font-weight: 650;
+}
+
+#ventilationScreen .ventilation-table-values-grid .v {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #193f6a;
+  font-weight: 720;
+}
+
+#ventilationScreen .ventilation-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+#ventilationScreen .ventilation-actions .btn {
+  margin-left: 0;
+}
+
+#ventilationScreen .cond-secondary-btn {
+  background: #f4f8ff;
+  border-color: #b7cae6;
+  color: #23456b;
+}
+
+#ventilationScreen .cond-secondary-btn:hover {
+  background: #ebf2ff;
+  border-color: #9fb7db;
+}
+
+#ventilationScreen .vent-action-add.btn-secondary {
+  background: #2f6fbe;
+  border-color: #2f6fbe;
+  color: #ffffff;
+}
+
+#ventilationScreen .vent-action-add.btn-secondary:hover {
+  background: #285fa5;
+  border-color: #285fa5;
+}
+
+#ventilationScreen .ventilation-actions .vent-action-duplicate {
+  opacity: 0.92;
+}
+
+#ventilationScreen .ventilation-actions .vent-action-reset {
+  opacity: 0.9;
+}
+
+#ventilationScreen .vent-editing-label {
+  display: inline-flex;
+  margin-top: 6px;
+  border: 1px solid #c7d8ee;
+  border-radius: 999px;
+  background: #eef5ff;
+  padding: 3px 9px;
+  font-size: 11px;
+  color: #284a74;
+  font-weight: 700;
+}
+
+#ventilationScreen .vent-action-cancel {
+  border-color: #c6d5e8;
+}
+
+#ventilationScreen .ventilation-note {
+  margin-top: 5px;
+}
+
+#ventilationScreen .ventilation-running-totals {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+#ventilationScreen .manager-title {
+  color: #183f69;
+  font-size: 14px;
+  font-weight: 800;
+  margin: 2px 0 7px;
+}
+
+#ventilationScreen .ventilation-running-totals .chip {
+  border: 1px solid #dbe6f3;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 6px 7px;
+}
+
+#ventilationScreen .ventilation-running-totals .chip .k {
+  display: block;
+  font-size: 10px;
+  color: #5f7592;
+}
+
+#ventilationScreen .ventilation-running-totals .chip .v {
+  display: block;
+  font-size: 14px;
+  font-weight: 760;
+  color: #15385f;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+#ventilationScreen .ventilation-table-wrap {
+  overflow-x: auto;
+}
+
+#ventilationScreen .ventilation-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  min-width: 1340px;
+}
+
+#ventilationScreen .ventilation-table th,
+#ventilationScreen .ventilation-table td {
+  padding: 5px 6px;
+  border-bottom: 1px solid #e6edf7;
+  vertical-align: middle;
+}
+
+#ventilationScreen .ventilation-table th {
+  font-weight: 750;
+  color: #2a466a;
+  background: #f1f7ff;
+  border-bottom-color: #d7e4f3;
+  text-align: left;
+}
+
+#ventilationScreen .ventilation-table th.num,
+#ventilationScreen .ventilation-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ventilationScreen .ventilation-table td.status-ok {
+  color: #1e6a3b;
+  font-weight: 700;
+}
+
+#ventilationScreen .ventilation-table td.status-under {
+  color: #8b2e2e;
+  font-weight: 700;
+}
+
+#ventilationScreen .ventilation-table td.status-none {
+  color: #6c7f96;
+}
+
+#ventilationScreen .ventilation-empty-row {
+  text-align: center;
+  color: #607793;
+  font-weight: 650;
+  padding: 14px 10px !important;
+  background: #fbfdff;
+}
+
+#ventilationScreen .ventilation-table td .btn {
+  margin-left: 0;
+  margin-top: 0;
+  height: 24px;
+  line-height: 22px;
+  padding: 0 7px;
+  font-size: 10px;
+}
+
+#ventilationScreen .ventilation-table td .vent-row-action {
+  min-width: 0;
+}
+
+#ventilationScreen .ventilation-table select,
+#ventilationScreen .ventilation-table input[type="number"],
+#ventilationScreen .ventilation-table input[type="text"] {
+  height: 28px;
+  font-size: 11px;
+  padding: 3px 6px;
+}
+
+#ventilationScreen .ventilation-pill-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+#ventilationScreen .ventilation-pill {
+  border: 1px solid #d7e4f2;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 5px 7px;
+}
+
+#ventilationScreen .ventilation-pill .k {
+  display: block;
+  font-size: 10px;
+  color: #5f7592;
+  font-weight: 650;
+}
+
+#ventilationScreen .ventilation-pill .v {
+  display: block;
+  font-size: 14px;
+  color: #15385f;
+  font-weight: 760;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+#ventilationScreen .ventilation-pill:nth-child(2) {
+  border-color: #9db6d9;
+  background: #edf5ff;
+}
+
+#ventilationScreen .ventilation-pill:nth-child(2) .v {
+  font-size: 18px;
+  font-weight: 800;
+  color: #10345d;
+}
+
+#ventilationScreen .ventilation-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+  font-size: 11px;
+}
+
+#ventilationScreen .ventilation-summary-table th,
+#ventilationScreen .ventilation-summary-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #e6edf7;
+}
+
+#ventilationScreen .ventilation-summary-table th {
+  text-align: left;
+  color: #415d80;
+  font-weight: 650;
+}
+
+#ventilationScreen .ventilation-summary-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ventilationScreen .right .result-card {
+  min-height: 0;
+}
+
+#ventilationScreen .right .result-card .result-title {
+  margin-bottom: 6px;
+}
+
+#ventilationScreen .right .result-card .subtle {
+  margin-bottom: 0;
+}
+
+#ventilationScreen .ventilation-formula-details {
+  margin-top: 6px;
+  border-top: 1px solid #e6edf7;
+  padding-top: 6px;
+}
+
+#ventilationScreen .ventilation-formula-details summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: #3c5a80;
+  font-weight: 650;
+}
+
+#ventilationScreen #ventilationCalculationDetails {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+@media screen and (max-width: 1000px) {
+  #ventilationScreen .ventilation-input-grid {
+    grid-template-columns: 1fr;
+  }
+  #ventilationScreen .ventilation-pill-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #ventilationScreen .ventilation-table-values-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #ventilationScreen .ventilation-preview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #ventilationScreen .ventilation-running-totals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
