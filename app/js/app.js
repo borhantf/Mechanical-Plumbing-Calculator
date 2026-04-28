@@ -41,6 +41,7 @@ var pipeData = {
     var latestRefrigerantSnapshot = null;
     var latestFixtureUnitSnapshot = null;
     var latestVentilationSnapshot = null;
+    var latestExhaustSnapshot = null;
     var fixtureUnitZones = [];
     var fixtureUnitZoneIdSeq = 0;
     var fixtureUnitRowIdSeq = 0;
@@ -70,6 +71,9 @@ var pipeData = {
     var ventilationZones = [];
     var ventilationZoneIdSeq = 0;
     var ventilationEditingZoneId = '';
+    var exhaustZones = [];
+    var exhaustZoneIdSeq = 0;
+    var exhaustEditingZoneId = '';
     var ventFixtureRows = [];
     var ventFixtureIdSeq = 0;
     var wsfuFixtureRows = [];
@@ -333,6 +337,54 @@ var pipeData = {
       { key: 'MAKEUP_LT_HALF', label: 'Makeup outlet < half room length from exhaust/return', ez: 0.5 },
       { key: 'CUSTOM', label: 'Manual custom Ez', ez: 1.0 }
     ];
+    function makeExhaustKey(name) {
+      return String(name || '')
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+    }
+    var exhaustOccupancyCatalog = [
+      { name: 'Animal imaging (MRI/CT/PET)', rateDisplay: '0.90 CFM/ft²', rate: 0.90, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Animal operating rooms', rateDisplay: '3.00 CFM/ft²', rate: 3.00, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Animal postoperative recovery room', rateDisplay: '1.50 CFM/ft²', rate: 1.50, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Animal preparation rooms', rateDisplay: '1.50 CFM/ft²', rate: 1.50, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Animal procedure room', rateDisplay: '2.25 CFM/ft²', rate: 2.25, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Animal surgery scrub', rateDisplay: '1.50 CFM/ft²', rate: 1.50, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Large-animal holding room', rateDisplay: '2.25 CFM/ft²', rate: 2.25, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Necropsy', rateDisplay: '2.25 CFM/ft²', rate: 2.25, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Small-animal-cage room - static cages', rateDisplay: '2.25 CFM/ft²', rate: 2.25, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Small-animal-cage room - ventilated cages', rateDisplay: '1.50 CFM/ft²', rate: 1.50, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Arenas', rateDisplay: '0.50 CFM/ft²', rate: 0.50, basis: 'cfm_per_ft2', airClass: 1 },
+      { name: 'Art classrooms', rateDisplay: '0.70 CFM/ft²', rate: 0.70, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Auto repair rooms', rateDisplay: '1.50 CFM/ft²', rate: 1.50, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Barber shops', rateDisplay: '0.50 CFM/ft²', rate: 0.50, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Bathroom', rateDisplay: '20/50 CFM', continuousRate: 20, intermittentRate: 50, basis: 'fixed_cfm', airClass: 2 },
+      { name: 'Beauty and nail salons', rateDisplay: '0.60 CFM/ft²', rate: 0.60, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Cells with toilet', rateDisplay: '1.00 CFM/ft²', rate: 1.00, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Copy, printing rooms', rateDisplay: '0.50 CFM/ft²', rate: 0.50, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Darkrooms', rateDisplay: '1.00 CFM/ft²', rate: 1.00, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Educational science laboratories', rateDisplay: '1.00 CFM/ft²', rate: 1.00, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Janitor closets, trash rooms, recycling', rateDisplay: '1.00 CFM/ft²', rate: 1.00, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Kitchenettes', rateDisplay: '0.30 CFM/ft²', rate: 0.30, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Kitchens - commercial', rateDisplay: '0.70 CFM/ft²', rate: 0.70, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Locker rooms for athletic, industrial and health care facilities', rateDisplay: '0.50 CFM/ft²', rate: 0.50, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'All other locker rooms', rateDisplay: '0.25 CFM/ft²', rate: 0.25, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Shower rooms', rateDisplay: '20/50 CFM', continuousRate: 20, intermittentRate: 50, basis: 'fixed_cfm', airClass: 2 },
+      { name: 'Paint spray booths', rateDisplay: 'Code / process specific', rate: null, basis: 'manual_required', airClass: 4 },
+      { name: 'Parking garages', rateDisplay: '0.75 CFM/ft²', rate: 0.75, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Pet shops - animal areas', rateDisplay: '0.90 CFM/ft²', rate: 0.90, basis: 'cfm_per_ft2', airClass: 2 },
+      { name: 'Refrigerating machinery rooms', rateDisplay: 'Code / process specific', rate: null, basis: 'manual_required', airClass: 3 },
+      { name: 'Residential kitchens', rateDisplay: '50/100 CFM', continuousRate: 50, intermittentRate: 100, basis: 'fixed_cfm', airClass: 2 },
+      { name: 'Soiled laundry storage rooms', rateDisplay: '1.00 CFM/ft²', rate: 1.00, basis: 'cfm_per_ft2', airClass: 3 },
+      { name: 'Storage rooms, chemical', rateDisplay: '1.50 CFM/ft²', rate: 1.50, basis: 'cfm_per_ft2', airClass: 4 },
+      { name: 'Toilet room - private', rateDisplay: '25/50 CFM', continuousRate: 25, intermittentRate: 50, basis: 'fixed_cfm', airClass: 2 },
+      { name: 'Toilet room - public', rateDisplay: '50/70 CFM', continuousRate: 50, intermittentRate: 70, basis: 'fixed_cfm', airClass: 2 },
+      { name: 'Woodwork shop / classrooms', rateDisplay: '0.50 CFM/ft²', rate: 0.50, basis: 'cfm_per_ft2', airClass: 2 }
+    ];
+    for (var exhaustOccIndex = 0; exhaustOccIndex < exhaustOccupancyCatalog.length; exhaustOccIndex++) {
+      exhaustOccupancyCatalog[exhaustOccIndex].key = exhaustOccupancyCatalog[exhaustOccIndex].key || makeExhaustKey(exhaustOccupancyCatalog[exhaustOccIndex].name);
+      exhaustOccupancyCatalog[exhaustOccIndex].air_class = exhaustOccupancyCatalog[exhaustOccIndex].airClass;
+    }
     var sanitary7032Table = {
       HORIZONTAL: [
         { size: '1-1/4"', maxUnits: 1, maxLength: 'Unlimited' },
@@ -829,6 +881,12 @@ var pipeData = {
           bindVentilationEntryLiveEvents();
           renderVentilationZonesTable();
           calculateVentilation(false);
+        } else if (moduleName === 'exhaust') {
+          ensureExhaustInitialized();
+          renderExhaustCategoryOptions();
+          renderExhaustZonesTable();
+          updateExhaustEntryPreview();
+          calculateExhaust(false);
         } else if (moduleName === 'refrigerant') {
           if (!refrigerantMultiRows || refrigerantMultiRows.length <= 0) addRefrigerantMultiRow();
           else renderRefrigerantMultiRows();
@@ -2232,6 +2290,16 @@ var pipeData = {
             zones: []
           }
         },
+        exhaust: {
+          selection: getExhaustSelectionState(),
+          result: (latestExhaustSnapshot && latestExhaustSnapshot.result) ? latestExhaustSnapshot.result : {
+            section: 'exhaust',
+            status: 'empty',
+            zones: [],
+            totalExhaust: 0,
+            summary: { zoneCount: 0, totalArea: 0, totalExhaust: 0, classSummary: '-' }
+          }
+        },
         sanitary_drainage: {
           zones: getSanitaryZonesState()
         },
@@ -2334,7 +2402,7 @@ var pipeData = {
       var settings, areas, container, blocks, i, j, area, block;
       var codeBasis, drainType, slopeSelect, slopeFound;
       var subContainer, wallContainer, subRows, wallRows;
-      var condensate, vent, ventilation, gas, wsfu, fixtureUnit, duct, ductStatic, solar, refrigerant, projectContext, gasCodeBasis, gasFuelType, activeModuleFromPayload;
+      var condensate, vent, ventilation, exhaust, gas, wsfu, fixtureUnit, duct, ductStatic, solar, refrigerant, projectContext, gasCodeBasis, gasFuelType, activeModuleFromPayload;
 
       if (!payload || parseInt(payload.schema_version, 10) !== APP_SCHEMA_VERSION) {
         throw new Error('Unsupported project schema version. Expected ' + APP_SCHEMA_VERSION + '.');
@@ -2345,6 +2413,7 @@ var pipeData = {
       condensate = payload.condensate || {};
       vent = payload.vent || {};
       ventilation = payload.ventilation || {};
+      exhaust = payload.exhaust || {};
       gas = payload.gas || {};
       wsfu = payload.wsfu || {};
       fixtureUnit = payload.fixtureUnit || {};
@@ -2538,6 +2607,20 @@ var pipeData = {
       }
       renderVentilationZonesTable();
       calculateVentilation(false);
+
+      if (exhaust && exhaust.selection && typeof exhaust.selection === 'object') {
+        applyExhaustSelectionState(exhaust.selection);
+      } else {
+        resetExhaustSection();
+      }
+      if (exhaust && exhaust.result && typeof exhaust.result === 'object') {
+        latestExhaustSnapshot = { section: 'exhaust', selection: getExhaustSelectionState(), result: exhaust.result };
+        if (document.getElementById('exhaustResults')) renderExhaustResults(exhaust.result);
+      } else {
+        latestExhaustSnapshot = null;
+      }
+      renderExhaustZonesTable();
+      calculateExhaust(false);
 
       if (document.getElementById('wsfuTotalFu')) {
         document.getElementById('wsfuTotalFu').value = parseNonNegativeNumber((wsfu.selection || {}).totalFu, 0);
@@ -2831,7 +2914,7 @@ var pipeData = {
       calculateDuct(false);
       updateSolarPreview();
       activeModuleFromPayload = payload.activeModule || 'home';
-      if (activeModuleFromPayload !== 'home' && activeModuleFromPayload !== 'storm' && activeModuleFromPayload !== 'condensate' && activeModuleFromPayload !== 'vent' && activeModuleFromPayload !== 'ventilation' && activeModuleFromPayload !== 'gas' && activeModuleFromPayload !== 'wsfu' && activeModuleFromPayload !== 'fixtureUnit' && activeModuleFromPayload !== 'solar' && activeModuleFromPayload !== 'duct' && activeModuleFromPayload !== 'ductStatic' && activeModuleFromPayload !== 'refrigerant') {
+      if (activeModuleFromPayload !== 'home' && activeModuleFromPayload !== 'storm' && activeModuleFromPayload !== 'condensate' && activeModuleFromPayload !== 'vent' && activeModuleFromPayload !== 'ventilation' && activeModuleFromPayload !== 'exhaust' && activeModuleFromPayload !== 'gas' && activeModuleFromPayload !== 'wsfu' && activeModuleFromPayload !== 'fixtureUnit' && activeModuleFromPayload !== 'solar' && activeModuleFromPayload !== 'duct' && activeModuleFromPayload !== 'ductStatic' && activeModuleFromPayload !== 'refrigerant') {
         activeModuleFromPayload = 'home';
       }
       setActiveModule(activeModuleFromPayload);
@@ -2924,6 +3007,14 @@ var pipeData = {
             message: 'Select occupancy and enter zone data to calculate required outdoor air.',
             zones: []
           }
+        };
+      }
+      if (activeModule === 'exhaust') {
+        return {
+          section: 'exhaust',
+          project: getProjectContextPayload(),
+          selection: getExhaustSelectionState(),
+          result: (latestExhaustSnapshot && latestExhaustSnapshot.result) ? latestExhaustSnapshot.result : computeExhaustResult()
         };
       }
       if (activeModule === 'gas') {
@@ -8212,6 +8303,458 @@ var pipeData = {
       calculateVentilation(false);
     }
 
+    function htmlSafe(value) {
+      return String(value === null || typeof value === 'undefined' ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function makeExhaustZoneId() {
+      exhaustZoneIdSeq += 1;
+      return 'exhaust_zone_' + exhaustZoneIdSeq;
+    }
+
+    function ensureExhaustInitialized() {
+      if (!exhaustZones) exhaustZones = [];
+      if (exhaustZoneIdSeq < exhaustZones.length) exhaustZoneIdSeq = exhaustZones.length;
+    }
+
+    function getExhaustOccupancyByKey(key) {
+      var target = String(key || '').trim();
+      if (!target) return null;
+      for (var i = 0; i < exhaustOccupancyCatalog.length; i++) {
+        if (exhaustOccupancyCatalog[i].key === target) return exhaustOccupancyCatalog[i];
+      }
+      for (var j = 0; j < exhaustOccupancyCatalog.length; j++) {
+        if (String(exhaustOccupancyCatalog[j].name || '').toLowerCase() === target.toLowerCase()) return exhaustOccupancyCatalog[j];
+      }
+      return null;
+    }
+
+    function renderExhaustCategoryOptions() {
+      var node = document.getElementById('exhaustCategory');
+      var html = '<option value="">Select exhaust category...</option>';
+      var selected = node ? String(node.value || '') : '';
+      if (!node) return;
+      for (var i = 0; i < exhaustOccupancyCatalog.length; i++) {
+        var item = exhaustOccupancyCatalog[i];
+        html += '<option value="' + item.key + '"' + (item.key === selected ? ' selected' : '') + '>' + htmlSafe(item.name) + '</option>';
+      }
+      node.innerHTML = html;
+      if (selected) node.value = selected;
+    }
+
+    function exhaustRateIsDual(item) {
+      return !!(item && item.basis === 'fixed_cfm' && typeof item.continuousRate !== 'undefined' && typeof item.intermittentRate !== 'undefined');
+    }
+
+    function getExhaustRateValue(item, operationMode) {
+      if (!item) return 0;
+      if (item.basis === 'fixed_cfm') {
+        if (exhaustRateIsDual(item)) {
+          return String(operationMode || 'CONTINUOUS').toUpperCase() === 'INTERMITTENT'
+            ? parseNonNegativeNumber(item.intermittentRate, 0)
+            : parseNonNegativeNumber(item.continuousRate, 0);
+        }
+        return parseNonNegativeNumber(item.rate, 0);
+      }
+      return parseNonNegativeNumber(item.rate, 0);
+    }
+
+    function exhaustBasisLabel(basis) {
+      var key = String(basis || '');
+      if (key === 'cfm_per_ft2') return 'CFM/ft²';
+      if (key === 'fixed_cfm') return 'Fixed CFM';
+      if (key === 'manual_required') return 'Manual Required';
+      return '-';
+    }
+
+    function exhaustRateDisplay(item) {
+      if (!item) return '-';
+      if (item.rateDisplay) return String(item.rateDisplay);
+      return String(item.rate) + (item.basis === 'cfm_per_ft2' ? ' CFM/ft²' : ' CFM');
+    }
+
+    function renderExhaustAirClassPill(airClass) {
+      var cls = parseInt(airClass, 10);
+      if (isNaN(cls) || cls < 1) return '-';
+      if (cls > 4) cls = 4;
+      return '<span class="exhaust-air-class-pill air-class-' + cls + '">Class ' + cls + '</span>';
+    }
+
+    function computeExhaustForZone(zone) {
+      var item = getExhaustOccupancyByKey(zone ? (zone.categoryKey || zone.category || zone.categoryName) : '');
+      var area = parseNonNegativeNumber(zone ? zone.area : 0, 0);
+      var quantity = parseNonNegativeNumber(zone ? zone.quantity : 1, 1);
+      var manualExhaustCfm = parseNonNegativeNumber(zone ? zone.manualExhaustCfm : 0, 0);
+      var mode = String(zone ? zone.operationMode : 'CONTINUOUS').toUpperCase() === 'INTERMITTENT' ? 'INTERMITTENT' : 'CONTINUOUS';
+      var rateValue = item ? getExhaustRateValue(item, mode) : 0;
+      var exhaust = 0;
+      if (item && item.basis === 'cfm_per_ft2') exhaust = rateValue * area;
+      else if (item && item.basis === 'fixed_cfm') exhaust = rateValue * quantity;
+      else if (item && item.basis === 'manual_required') exhaust = manualExhaustCfm;
+      return {
+        item: item,
+        zoneName: zone ? String(zone.zoneName || '') : '',
+        area: area,
+        quantity: quantity,
+        operationMode: mode,
+        rateDisplay: item ? exhaustRateDisplay(item) : '',
+        rateValue: roundNumber(rateValue, 4),
+        basis: item ? item.basis : '',
+        airClass: item ? item.airClass : '',
+        manualExhaustCfm: roundNumber(manualExhaustCfm, 4),
+        selectedRate: roundNumber(rateValue, 4),
+        calculatedExhaust: roundNumber(exhaust, 4),
+        exhaustCfm: roundNumber(exhaust, 4)
+      };
+    }
+
+    function getExhaustEntryDraft() {
+      var categoryKey = document.getElementById('exhaustCategory') ? String(document.getElementById('exhaustCategory').value || '') : '';
+      return {
+        zoneName: document.getElementById('exhaustZoneName') ? String(document.getElementById('exhaustZoneName').value || '').trim() : '',
+        categoryKey: categoryKey,
+        area: parseNonNegativeNumber(document.getElementById('exhaustArea') ? document.getElementById('exhaustArea').value : 0, 0),
+        quantity: parseNonNegativeNumber(document.getElementById('exhaustQuantity') ? document.getElementById('exhaustQuantity').value : 1, 1),
+        manualExhaustCfm: parseNonNegativeNumber(document.getElementById('exhaustManualCfm') ? document.getElementById('exhaustManualCfm').value : 0, 0),
+        operationMode: (document.getElementById('exhaustOperationMode') && document.getElementById('exhaustOperationMode').value === 'INTERMITTENT') ? 'INTERMITTENT' : 'CONTINUOUS'
+      };
+    }
+
+    function updateExhaustEditUI() {
+      var inEdit = !!exhaustEditingZoneId;
+      var addBtn = document.getElementById('exhaustAddUpdateBtn');
+      var cancelBtn = document.getElementById('exhaustCancelEditBtn');
+      var labelNode = document.getElementById('exhaustEditingLabel');
+      var zone = null;
+      if (addBtn) addBtn.value = inEdit ? 'UPDATE ZONE' : '+ ADD ZONE';
+      if (cancelBtn) cancelBtn.style.display = inEdit ? '' : 'none';
+      if (labelNode) {
+        if (inEdit) {
+          for (var i = 0; i < exhaustZones.length; i++) if (exhaustZones[i].id === exhaustEditingZoneId) zone = exhaustZones[i];
+          labelNode.style.display = '';
+          labelNode.innerHTML = 'Editing zone: ' + htmlSafe(zone ? zone.zoneName : 'Selected zone');
+        } else {
+          labelNode.style.display = 'none';
+          labelNode.innerHTML = '';
+        }
+      }
+    }
+
+    function updateExhaustEntryPreview() {
+      var draft = getExhaustEntryDraft();
+      var calc = computeExhaustForZone(draft);
+      var item = calc.item;
+      var isFixed = item && item.basis === 'fixed_cfm';
+      var isAreaBased = item && item.basis === 'cfm_per_ft2';
+      var isManualRequired = item && item.basis === 'manual_required';
+      var dual = isFixed && exhaustRateIsDual(item);
+      var areaField = document.getElementById('exhaustAreaField');
+      var quantityField = document.getElementById('exhaustQuantityField');
+      var modeField = document.getElementById('exhaustOperationModeField');
+      var manualField = document.getElementById('exhaustManualCfmField');
+      var manualNote = document.getElementById('exhaustManualRequiredNote');
+      if (areaField) areaField.style.display = (!item || isAreaBased) ? '' : 'none';
+      if (quantityField) quantityField.style.display = isFixed ? '' : 'none';
+      if (modeField) modeField.style.display = dual ? '' : 'none';
+      if (manualField) manualField.style.display = isManualRequired ? '' : 'none';
+      if (manualNote) manualNote.style.display = isManualRequired ? '' : 'none';
+      if (document.getElementById('exhaustRatePreview')) document.getElementById('exhaustRatePreview').value = item ? exhaustRateDisplay(item) : '-';
+      if (document.getElementById('exhaustBasisPreview')) document.getElementById('exhaustBasisPreview').value = item ? exhaustBasisLabel(item.basis) : '-';
+      if (document.getElementById('exhaustAirClassPreview')) document.getElementById('exhaustAirClassPreview').value = item ? ('Class ' + item.airClass) : '-';
+      if (document.getElementById('exhaustPreviewCfm')) document.getElementById('exhaustPreviewCfm').value = formatNumber(calc.exhaustCfm, 2);
+      if (document.getElementById('exhaustCodeRateValue')) document.getElementById('exhaustCodeRateValue').innerHTML = item ? exhaustRateDisplay(item) : '—';
+      if (document.getElementById('exhaustCodeBasisValue')) document.getElementById('exhaustCodeBasisValue').innerHTML = item ? exhaustBasisLabel(item.basis) : '—';
+      if (document.getElementById('exhaustCodeAirClassValue')) document.getElementById('exhaustCodeAirClassValue').innerHTML = item ? renderExhaustAirClassPill(item.airClass) : '—';
+      if (document.getElementById('exhaustCodeQuantityRow')) document.getElementById('exhaustCodeQuantityRow').style.display = isFixed ? '' : 'none';
+      if (document.getElementById('exhaustCodeOperationRow')) document.getElementById('exhaustCodeOperationRow').style.display = dual ? '' : 'none';
+      if (document.getElementById('exhaustCodeQuantityValue')) document.getElementById('exhaustCodeQuantityValue').innerHTML = isFixed ? formatNumber(calc.quantity, 0) : '—';
+      if (document.getElementById('exhaustCodeOperationValue')) document.getElementById('exhaustCodeOperationValue').innerHTML = dual ? (calc.operationMode === 'INTERMITTENT' ? 'Intermittent' : 'Continuous') : '—';
+      if (document.getElementById('exhaustCodePreviewValue')) document.getElementById('exhaustCodePreviewValue').innerHTML = formatNumber(calc.exhaustCfm, 2) + ' CFM';
+    }
+
+    function onExhaustCategoryChanged() {
+      updateExhaustEntryPreview();
+    }
+
+    function resetExhaustInputForm() {
+      exhaustEditingZoneId = '';
+      if (document.getElementById('exhaustZoneName')) document.getElementById('exhaustZoneName').value = '';
+      if (document.getElementById('exhaustArea')) document.getElementById('exhaustArea').value = 0;
+      if (document.getElementById('exhaustQuantity')) document.getElementById('exhaustQuantity').value = 1;
+      if (document.getElementById('exhaustManualCfm')) document.getElementById('exhaustManualCfm').value = '';
+      if (document.getElementById('exhaustCategory')) document.getElementById('exhaustCategory').value = '';
+      if (document.getElementById('exhaustOperationMode')) document.getElementById('exhaustOperationMode').value = 'CONTINUOUS';
+      if (document.getElementById('exhaustValidation')) document.getElementById('exhaustValidation').innerHTML = '';
+      updateExhaustEditUI();
+      updateExhaustEntryPreview();
+      renderExhaustZonesTable();
+      calculateExhaust(false);
+    }
+
+    function cancelExhaustEdit() {
+      resetExhaustInputForm();
+    }
+
+    function addExhaustZoneFromInputs() {
+      ensureExhaustInitialized();
+      var draft = getExhaustEntryDraft();
+      var validation = document.getElementById('exhaustValidation');
+      if (!draft.zoneName) {
+        if (validation) validation.innerHTML = 'Enter a zone name before adding the zone.';
+        return;
+      }
+      if (!draft.categoryKey || !getExhaustOccupancyByKey(draft.categoryKey)) {
+        if (validation) validation.innerHTML = 'Select an occupancy category before adding the zone.';
+        return;
+      }
+      if (draft.area < 0) {
+        if (validation) validation.innerHTML = 'Area must be greater than or equal to zero.';
+        return;
+      }
+      if (draft.quantity < 0) {
+        if (validation) validation.innerHTML = 'Number of units / rooms must be greater than or equal to zero.';
+        return;
+      }
+      if (validation) validation.innerHTML = '';
+      var calc = computeExhaustForZone(draft);
+      var stored = {
+        zoneName: draft.zoneName,
+        categoryKey: draft.categoryKey,
+        category: calc.item ? calc.item.name : '',
+        area: calc.basis === 'cfm_per_ft2' ? draft.area : 0,
+        quantity: calc.basis === 'fixed_cfm' ? draft.quantity : 0,
+        rateDisplay: calc.rateDisplay,
+        selectedRate: calc.selectedRate,
+        basis: calc.basis,
+        airClass: calc.airClass,
+        operationMode: calc.operationMode,
+        manualExhaustCfm: calc.manualExhaustCfm,
+        calculatedExhaust: calc.calculatedExhaust
+      };
+      if (exhaustEditingZoneId) {
+        for (var i = 0; i < exhaustZones.length; i++) {
+          if (exhaustZones[i].id === exhaustEditingZoneId) {
+            stored.id = exhaustEditingZoneId;
+            exhaustZones[i] = stored;
+            break;
+          }
+        }
+      } else {
+        stored.id = makeExhaustZoneId();
+        exhaustZones.push(stored);
+      }
+      calculateExhaust(true);
+      resetExhaustInputForm();
+    }
+
+    function editExhaustZone(zoneId) {
+      ensureExhaustInitialized();
+      var zone = null;
+      for (var i = 0; i < exhaustZones.length; i++) if (exhaustZones[i].id === zoneId) zone = exhaustZones[i];
+      if (!zone) return;
+      exhaustEditingZoneId = zoneId;
+      if (document.getElementById('exhaustZoneName')) document.getElementById('exhaustZoneName').value = zone.zoneName || '';
+      if (document.getElementById('exhaustArea')) document.getElementById('exhaustArea').value = parseNonNegativeNumber(zone.area, 0);
+      if (document.getElementById('exhaustQuantity')) document.getElementById('exhaustQuantity').value = parseNonNegativeNumber(zone.quantity, 1);
+      if (document.getElementById('exhaustManualCfm')) document.getElementById('exhaustManualCfm').value = parseNonNegativeNumber(zone.manualExhaustCfm, 0) || '';
+      renderExhaustCategoryOptions();
+      if (document.getElementById('exhaustCategory')) document.getElementById('exhaustCategory').value = zone.categoryKey || '';
+      if (document.getElementById('exhaustOperationMode')) document.getElementById('exhaustOperationMode').value = zone.operationMode || 'CONTINUOUS';
+      updateExhaustEditUI();
+      updateExhaustEntryPreview();
+      renderExhaustZonesTable();
+    }
+
+    function deleteExhaustZone(zoneId) {
+      exhaustZones = exhaustZones.filter(function (zone) { return zone.id !== zoneId; });
+      if (exhaustEditingZoneId === zoneId) exhaustEditingZoneId = '';
+      updateExhaustEditUI();
+      renderExhaustZonesTable();
+      calculateExhaust(true);
+    }
+
+    function renderExhaustRunningTotals(result) {
+      var node = document.getElementById('exhaustRunningTotals');
+      if (!node) return;
+      var summary = result && result.summary ? result.summary : { zoneCount: 0, totalArea: 0, totalExhaust: 0, classSummary: '-' };
+      node.innerHTML =
+        '<div class="chip"><span class="k">Total Zones</span><span class="v">' + summary.zoneCount + '</span></div>' +
+        '<div class="chip"><span class="k">Total Area</span><span class="v">' + formatNumber(summary.totalArea, 2) + ' ft²</span></div>' +
+        '<div class="chip"><span class="k">Total Exhaust</span><span class="v">' + formatNumber(summary.totalExhaust, 2) + ' CFM</span></div>' +
+        '<div class="chip"><span class="k">Air Classes</span><span class="v">' + htmlSafe(summary.classSummary || '-') + '</span></div>';
+    }
+
+    function computeExhaustResult() {
+      ensureExhaustInitialized();
+      var rows = [];
+      var totalExhaust = 0;
+      var totalArea = 0;
+      var classCounts = {};
+      for (var i = 0; i < exhaustZones.length; i++) {
+        var zone = exhaustZones[i];
+        var calc = computeExhaustForZone(zone);
+        totalExhaust += calc.exhaustCfm;
+        if (calc.basis === 'cfm_per_ft2') totalArea += calc.area;
+        if (calc.airClass) classCounts[String(calc.airClass)] = (classCounts[String(calc.airClass)] || 0) + 1;
+        rows.push({
+          id: zone.id,
+          zoneName: zone.zoneName || ('Zone ' + (i + 1)),
+          categoryKey: zone.categoryKey || '',
+          categoryName: calc.item ? calc.item.name : (zone.category || zone.categoryName || ''),
+          area: roundNumber(calc.area, 4),
+          quantity: roundNumber(calc.quantity, 4),
+          operationMode: calc.operationMode,
+          rate: calc.rateDisplay,
+          rateDisplay: calc.rateDisplay,
+          selectedRate: calc.selectedRate,
+          basis: calc.basis,
+          basisLabel: exhaustBasisLabel(calc.basis),
+          airClass: calc.airClass,
+          manualExhaustCfm: calc.manualExhaustCfm,
+          calculatedExhaust: calc.calculatedExhaust,
+          exhaustCfm: calc.exhaustCfm
+        });
+      }
+      var classParts = [];
+      for (var cls in classCounts) if (Object.prototype.hasOwnProperty.call(classCounts, cls)) classParts.push('Class ' + cls + ': ' + classCounts[cls]);
+      return {
+        section: 'exhaust',
+        status: rows.length ? 'ok' : 'empty',
+        zones: rows,
+        totalExhaust: roundNumber(totalExhaust, 4),
+        summary: {
+          zoneCount: rows.length,
+          totalArea: roundNumber(totalArea, 4),
+          totalExhaust: roundNumber(totalExhaust, 4),
+          classSummary: classParts.length ? classParts.join(' | ') : '-'
+        }
+      };
+    }
+
+    function renderExhaustResults(result) {
+      var node = document.getElementById('exhaustResults');
+      if (!node) return;
+      var total = result ? parseNonNegativeNumber(result.totalExhaust, 0) : 0;
+      var zoneCount = result && result.summary ? parseNonNegativeNumber(result.summary.zoneCount, 0) : 0;
+      node.innerHTML =
+        '<div class="ventilation-pill-grid">' +
+        '<div class="ventilation-pill"><span class="k">Total Exhaust Airflow</span><span class="v">' + formatNumber(total, 2) + ' CFM</span></div>' +
+        '<div class="ventilation-pill"><span class="k">Zones</span><span class="v">' + zoneCount + '</span></div>' +
+        '</div>' +
+        '<div class="module-note">Total Exhaust Airflow: ' + formatNumber(total, 2) + ' CFM</div>';
+    }
+
+    function renderExhaustZonesTable() {
+      var body = document.getElementById('exhaustZonesBody');
+      if (!body) return;
+      var result = computeExhaustResult();
+      var html = '';
+      renderExhaustRunningTotals(result);
+      if (!result.zones.length) {
+        body.innerHTML = '<tr><td colspan="10" class="ventilation-empty-row">No zones added yet. Enter zone information above and click + ADD ZONE.</td></tr>';
+        return;
+      }
+      for (var i = 0; i < result.zones.length; i++) {
+        var row = result.zones[i];
+        var rateText = row.rateDisplay || row.rate || '-';
+        var modeText = row.basis === 'fixed_cfm' ? (row.operationMode === 'INTERMITTENT' ? 'Intermittent' : 'Continuous') : (row.basis === 'manual_required' ? 'Manual' : '-');
+        html += '<tr class="' + (row.id === exhaustEditingZoneId ? 'exhaust-editing-row' : '') + '">';
+        html += '<td>' + htmlSafe(row.zoneName) + '</td>';
+        html += '<td>' + htmlSafe(row.categoryName) + '</td>';
+        html += '<td class="num">' + (row.basis === 'cfm_per_ft2' ? formatNumber(row.area, 2) : '-') + '</td>';
+        html += '<td class="num">' + (row.basis === 'fixed_cfm' ? formatNumber(row.quantity, 0) : '-') + '</td>';
+        html += '<td>' + htmlSafe(rateText) + '</td>';
+        html += '<td>' + htmlSafe(modeText) + '</td>';
+        html += '<td>' + htmlSafe(row.basisLabel) + '</td>';
+        html += '<td>' + renderExhaustAirClassPill(row.airClass) + '</td>';
+        html += '<td class="num">' + formatNumber(row.exhaustCfm, 2) + '</td>';
+        html += '<td><input type="button" class="btn cond-secondary-btn vent-row-action" value="Edit" onclick="editExhaustZone(\'' + row.id + '\');" /> <input type="button" class="btn btn-small zone-danger-btn vent-row-action" value="Delete" onclick="deleteExhaustZone(\'' + row.id + '\');" /></td>';
+        html += '</tr>';
+      }
+      body.innerHTML = html;
+    }
+
+    function getExhaustSelectionState() {
+      ensureExhaustInitialized();
+      return {
+        zones: exhaustZones.map(function (zone) {
+          return {
+            id: zone.id,
+            zoneName: zone.zoneName || '',
+            categoryKey: zone.categoryKey || '',
+            categoryName: (getExhaustOccupancyByKey(zone.categoryKey) || {}).name || zone.category || zone.categoryName || '',
+            area: parseNonNegativeNumber(zone.area, 0),
+            quantity: parseNonNegativeNumber(zone.quantity, 0),
+            rateDisplay: zone.rateDisplay || '',
+            selectedRate: parseNonNegativeNumber(zone.selectedRate, 0),
+            basis: zone.basis || '',
+            airClass: zone.airClass || '',
+            operationMode: zone.operationMode || 'CONTINUOUS',
+            manualExhaustCfm: parseNonNegativeNumber(zone.manualExhaustCfm, 0),
+            calculatedExhaust: parseNonNegativeNumber(zone.calculatedExhaust, 0)
+          };
+        })
+      };
+    }
+
+    function applyExhaustSelectionState(selection) {
+      exhaustZones = [];
+      exhaustZoneIdSeq = 0;
+      exhaustEditingZoneId = '';
+      var zones = selection && selection.zones && selection.zones.length ? selection.zones : [];
+      for (var i = 0; i < zones.length; i++) {
+        var row = zones[i] || {};
+        exhaustZoneIdSeq += 1;
+        exhaustZones.push({
+          id: row.id || ('exhaust_zone_' + exhaustZoneIdSeq),
+          zoneName: String(row.zoneName || ''),
+          categoryKey: String(row.categoryKey || ''),
+          category: String(row.category || row.categoryName || ''),
+          area: parseNonNegativeNumber(row.area, 0),
+          quantity: parseNonNegativeNumber(row.quantity, 0),
+          rateDisplay: String(row.rateDisplay || row.rate || ''),
+          selectedRate: parseNonNegativeNumber(row.selectedRate || row.rateValue, 0),
+          basis: String(row.basis || ''),
+          airClass: row.airClass || row.air_class || '',
+          operationMode: row.operationMode === 'INTERMITTENT' ? 'INTERMITTENT' : 'CONTINUOUS',
+          manualExhaustCfm: parseNonNegativeNumber(row.manualExhaustCfm, 0),
+          calculatedExhaust: parseNonNegativeNumber(row.calculatedExhaust || row.exhaustCfm, 0)
+        });
+      }
+      renderExhaustCategoryOptions();
+      resetExhaustInputForm();
+      renderExhaustZonesTable();
+      calculateExhaust(false);
+    }
+
+    function calculateExhaust(commitResults) {
+      var result = computeExhaustResult();
+      latestExhaustSnapshot = {
+        section: 'exhaust',
+        selection: getExhaustSelectionState(),
+        result: result
+      };
+      renderExhaustResults(result);
+      renderExhaustZonesTable();
+      return result;
+    }
+
+    function resetExhaustSection() {
+      latestExhaustSnapshot = null;
+      exhaustZones = [];
+      exhaustZoneIdSeq = 0;
+      exhaustEditingZoneId = '';
+      renderExhaustCategoryOptions();
+      resetExhaustInputForm();
+      renderExhaustZonesTable();
+      calculateExhaust(false);
+    }
+
     async function syncAppMetaFromBackend(attempt) {
       var tryCount = parseInt(attempt, 10);
       if (isNaN(tryCount) || tryCount < 0) tryCount = 0;
@@ -8261,6 +8804,7 @@ var pipeData = {
       resetWsfuSection();
       resetFixtureUnitSection();
       resetVentilationSection();
+      resetExhaustSection();
       resetDuctSection();
       resetDuctStaticSection();
       if (document.getElementById('solarBuildingSf')) document.getElementById('solarBuildingSf').value = 0;
@@ -8295,6 +8839,7 @@ var pipeData = {
       latestSolarSnapshot = null;
       latestRefrigerantSnapshot = null;
       latestVentilationSnapshot = null;
+      latestExhaustSnapshot = null;
       setActiveModule('home');
       updateHomeDashboardFit();
     }

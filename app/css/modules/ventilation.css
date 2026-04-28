@@ -497,3 +497,326 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+#exhaustScreen .ventilation-grid {
+  gap: 7px;
+}
+
+#exhaustScreen .card,
+#exhaustScreen .result-card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#exhaustScreen .ventilation-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #27466f;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.18px;
+}
+
+#exhaustScreen .ventilation-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 8px;
+}
+
+#exhaustScreen .ventilation-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#exhaustScreen .ventilation-field label {
+  font-size: 11px;
+  color: #5b6f89;
+  font-weight: 650;
+}
+
+#exhaustScreen .ventilation-field-span2 {
+  grid-column: 1 / -1;
+}
+
+#exhaustScreen .ventilation-table-values-card {
+  border: 1px solid #dbe6f3;
+  border-radius: 9px;
+  background: #ffffff;
+  padding: 7px;
+  margin-top: 6px;
+}
+
+#exhaustScreen .ventilation-side-preview-card {
+  margin-top: 7px;
+}
+
+#exhaustScreen .ventilation-card-group {
+  border: 1px solid #e1eaf5;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 6px 7px;
+}
+
+#exhaustScreen .ventilation-table-values-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 650;
+  color: #2a466a;
+  margin-bottom: 4px;
+}
+
+#exhaustScreen .ventilation-code-badge {
+  border: 1px solid #cfddf1;
+  background: #eef5ff;
+  color: #375b86;
+  border-radius: 999px;
+  padding: 2px 7px;
+  font-size: 10px;
+}
+
+#exhaustScreen .ventilation-table-values-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+#exhaustScreen .ventilation-table-values-grid .k {
+  display: block;
+  font-size: 10px;
+  color: #607793;
+  font-weight: 650;
+}
+
+#exhaustScreen .ventilation-table-values-grid .v {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #193f6a;
+  font-weight: 720;
+}
+
+#exhaustScreen .ventilation-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+#exhaustScreen .ventilation-actions .btn {
+  margin-left: 0;
+}
+
+#exhaustScreen .cond-secondary-btn {
+  background: #f4f8ff;
+  border-color: #b7cae6;
+  color: #23456b;
+}
+
+#exhaustScreen .cond-secondary-btn:hover {
+  background: #ebf2ff;
+  border-color: #9fb7db;
+}
+
+#exhaustScreen .vent-action-add.btn-secondary {
+  background: #2f6fbe;
+  border-color: #2f6fbe;
+  color: #ffffff;
+}
+
+#exhaustScreen .vent-action-add.btn-secondary:hover {
+  background: #285fa5;
+  border-color: #285fa5;
+}
+
+#exhaustScreen .vent-editing-label {
+  display: inline-flex;
+  margin-top: 6px;
+  border: 1px solid #c7d8ee;
+  border-radius: 999px;
+  background: #eef5ff;
+  padding: 3px 9px;
+  font-size: 11px;
+  color: #284a74;
+  font-weight: 700;
+}
+
+#exhaustScreen .ventilation-running-totals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+#exhaustScreen .manager-title {
+  color: #183f69;
+  font-size: 14px;
+  font-weight: 800;
+  margin: 2px 0 7px;
+}
+
+#exhaustScreen .ventilation-running-totals .chip {
+  border: 1px solid #dbe6f3;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 6px 7px;
+}
+
+#exhaustScreen .ventilation-running-totals .chip .k {
+  display: block;
+  font-size: 10px;
+  color: #5f7592;
+}
+
+#exhaustScreen .ventilation-running-totals .chip .v {
+  display: block;
+  font-size: 14px;
+  font-weight: 760;
+  color: #15385f;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+#exhaustScreen .ventilation-table-wrap {
+  overflow-x: auto;
+}
+
+#exhaustScreen .ventilation-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  min-width: 1120px;
+}
+
+#exhaustScreen .ventilation-table th,
+#exhaustScreen .ventilation-table td {
+  padding: 5px 6px;
+  border-bottom: 1px solid #e6edf7;
+  vertical-align: middle;
+}
+
+#exhaustScreen .ventilation-table th {
+  font-weight: 750;
+  color: #2a466a;
+  background: #f1f7ff;
+  border-bottom-color: #d7e4f3;
+  text-align: left;
+}
+
+#exhaustScreen .ventilation-table th.num,
+#exhaustScreen .ventilation-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#exhaustScreen .ventilation-empty-row {
+  text-align: center;
+  color: #607793;
+  font-weight: 650;
+  padding: 14px 10px !important;
+  background: #fbfdff;
+}
+
+#exhaustScreen .ventilation-table td .btn {
+  margin-left: 0;
+  margin-top: 0;
+  height: 24px;
+  line-height: 22px;
+  padding: 0 7px;
+  font-size: 10px;
+}
+
+#exhaustScreen .ventilation-pill-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+#exhaustScreen .ventilation-pill {
+  border: 1px solid #d7e4f2;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 7px 8px;
+}
+
+#exhaustScreen .ventilation-pill .k {
+  display: block;
+  font-size: 10px;
+  color: #5f7592;
+  font-weight: 650;
+}
+
+#exhaustScreen .ventilation-pill .v {
+  display: block;
+  font-size: 15px;
+  color: #15385f;
+  font-weight: 760;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+#exhaustScreen .exhaust-result-card .ventilation-pill:first-child {
+  border-color: #9db6d9;
+  background: #edf5ff;
+}
+
+#exhaustScreen .exhaust-result-card .ventilation-pill:first-child .v {
+  font-size: 22px;
+  font-weight: 850;
+  color: #10345d;
+}
+
+#exhaustScreen .exhaust-air-class-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 800;
+  border: 1px solid #d4deea;
+}
+
+#exhaustScreen .air-class-1 {
+  color: #1e6a3b;
+  background: #eaf6ee;
+  border-color: #b9dcc6;
+}
+
+#exhaustScreen .air-class-2 {
+  color: #8a4b12;
+  background: #fff3e4;
+  border-color: #edc997;
+}
+
+#exhaustScreen .air-class-3 {
+  color: #8b2e2e;
+  background: #fdecec;
+  border-color: #efc1c1;
+}
+
+#exhaustScreen .air-class-4 {
+  color: #ffffff;
+  background: #7a1f1f;
+  border-color: #641717;
+}
+
+#exhaustScreen .exhaust-editing-row {
+  background: #fff8e8;
+}
+
+@media screen and (max-width: 1000px) {
+  #exhaustScreen .ventilation-input-grid {
+    grid-template-columns: 1fr;
+  }
+  #exhaustScreen .ventilation-pill-grid,
+  #exhaustScreen .ventilation-table-values-grid,
+  #exhaustScreen .ventilation-running-totals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

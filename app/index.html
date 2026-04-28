@@ -39,6 +39,7 @@
       <button id="navCondensate" class="nav-btn" onclick="openModule('condensate');">Condensate</button>
       <button id="navVent" class="nav-btn" onclick="openModule('vent');">Sanitary Drainage</button>
       <button id="navVentilation" class="nav-btn" onclick="openModule('ventilation');">Ventilation</button>
+      <button id="navExhaust" class="nav-btn" onclick="openModule('exhaust');">Exhaust</button>
       <button id="navGas" class="nav-btn" onclick="openModule('gas');">Gas Pipe</button>
       <button id="navDuct" class="nav-btn" onclick="openModule('duct');">Duct</button>
       <button id="navDuctStatic" class="nav-btn" onclick="openModule('ductStatic');">Duct Static</button>
@@ -134,6 +135,20 @@
               </div>
               <div class="home-card-illustration-wrap cat-ventilation">
                 <img class="home-card-illustration" src="Ventilation.png" alt="Ventilation Calculator illustration" />
+              </div>
+            </div>
+          </div>
+          <div class="card clickable-card" role="button" tabindex="0" aria-label="Open Exhaust Airflow Calculator" onclick="openModule('exhaust');" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModule('exhaust');}">
+            <div class="home-card-content">
+              <div class="home-card-text">
+                <div class="home-card-heading">
+                  <div class="home-card-title">Exhaust Airflow Calculator</div>
+                  <span class="home-card-chevron" aria-hidden="true">&#8250;</span>
+                </div>
+                <div class="home-card-subtitle">Zone-based exhaust airflow worksheet using ASHRAE 62.1 Table 6-2 categories, operation mode, and air-class review.</div>
+              </div>
+              <div class="home-card-illustration-wrap cat-ventilation">
+                <img class="home-card-illustration" src="Exhaust.png" alt="Exhaust Airflow Calculator illustration" />
               </div>
             </div>
           </div>
@@ -687,6 +702,122 @@
         </div>
       </div>
       <div class="module-note">Ventilation values are based on CMC Chapter 4 Table 402.1 and related equations. Verify jurisdictional and energy-code applicability before final design use.</div>
+      <div class="results-signature">Designed by: Borhan Torkfar</div>
+    </div>
+
+    <div id="exhaustScreen" class="module-screen module-shell">
+      <div class="module-header">
+        <h2 class="module-title">Exhaust Airflow Calculator</h2>
+        <input type="button" class="btn btn-reset btn-toolbar" value="BACK TO HOME" onclick="backToHome();" />
+      </div>
+      <div class="grid ventilation-grid">
+        <div class="left">
+          <div class="card">
+            <div class="ventilation-section-title">Zone Inputs</div>
+            <div class="ventilation-input-grid">
+              <div class="ventilation-field">
+                <label for="exhaustZoneName">Zone Name</label>
+                <input type="text" id="exhaustZoneName" placeholder="Example: Restroom 101" />
+              </div>
+              <div class="ventilation-field" id="exhaustAreaField">
+                <label for="exhaustArea">Area (ft²)</label>
+                <input type="number" id="exhaustArea" min="0" step="0.01" value="0" oninput="updateExhaustEntryPreview();" />
+              </div>
+              <div class="ventilation-field" id="exhaustQuantityField" style="display:none;">
+                <label for="exhaustQuantity">Number of Units / Rooms</label>
+                <input type="number" id="exhaustQuantity" min="0" step="1" value="1" oninput="updateExhaustEntryPreview();" />
+              </div>
+              <div class="ventilation-field ventilation-field-span2">
+                <label for="exhaustCategory">Occupancy Category</label>
+                <select id="exhaustCategory" onchange="onExhaustCategoryChanged();"></select>
+              </div>
+              <div class="ventilation-field" id="exhaustOperationModeField">
+                <label for="exhaustOperationMode">Operation Mode</label>
+                <select id="exhaustOperationMode" onchange="updateExhaustEntryPreview();">
+                  <option value="CONTINUOUS">Continuous</option>
+                  <option value="INTERMITTENT">Intermittent</option>
+                </select>
+              </div>
+              <div class="ventilation-field">
+                <label for="exhaustRatePreview">Rate</label>
+                <input type="text" id="exhaustRatePreview" readonly="readonly" value="-" />
+              </div>
+              <div class="ventilation-field">
+                <label for="exhaustBasisPreview">Basis</label>
+                <input type="text" id="exhaustBasisPreview" readonly="readonly" value="-" />
+              </div>
+              <div class="ventilation-field">
+                <label for="exhaustAirClassPreview">Air Class</label>
+                <input type="text" id="exhaustAirClassPreview" readonly="readonly" value="-" />
+              </div>
+              <div class="ventilation-field">
+                <label for="exhaustPreviewCfm">Calculated Exhaust (CFM)</label>
+                <input type="text" id="exhaustPreviewCfm" readonly="readonly" value="0.00" />
+              </div>
+              <div class="ventilation-field" id="exhaustManualCfmField" style="display:none;">
+                <label for="exhaustManualCfm">Manual Exhaust CFM</label>
+                <input type="number" id="exhaustManualCfm" min="0" step="0.01" value="" oninput="updateExhaustEntryPreview();" />
+              </div>
+            </div>
+            <div id="exhaustManualRequiredNote" class="module-note" style="display:none;">This category requires project-specific/code-specific exhaust design.</div>
+            <div id="exhaustEditingLabel" class="vent-editing-label" style="display:none;"></div>
+            <div class="ventilation-actions">
+              <input type="button" id="exhaustCancelEditBtn" class="btn btn-reset vent-action-cancel" value="CANCEL EDIT" onclick="cancelExhaustEdit();" style="display:none;" />
+              <input type="button" class="btn btn-reset vent-action-reset" value="RESET" onclick="resetExhaustInputForm();" />
+              <input type="button" id="exhaustAddUpdateBtn" class="btn btn-secondary vent-action-add" value="+ ADD ZONE" onclick="addExhaustZoneFromInputs();" />
+              <input type="button" class="btn" value="CALCULATE" onclick="calculateExhaust(true);" />
+              <input type="button" class="btn cond-secondary-btn" value="EXPORT TO EXCEL" onclick="exportSectionToExcel();" />
+            </div>
+            <div class="validation-summary" id="exhaustValidation"></div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="result-card exhaust-result-card">
+            <div class="result-title">Results</div>
+            <div id="exhaustResults" class="subtle">Add exhaust zones to calculate total exhaust airflow.</div>
+          </div>
+          <div class="ventilation-table-values-card ventilation-side-preview-card">
+            <div class="ventilation-card-group">
+              <div class="ventilation-table-values-head">
+                <span>Selected Table Values</span>
+                <span class="ventilation-code-badge">ASHRAE 62.1 Table 6-2</span>
+              </div>
+              <div class="ventilation-table-values-grid">
+                <div><span class="k">Rate</span><span class="v" id="exhaustCodeRateValue">—</span></div>
+                <div><span class="k">Basis</span><span class="v" id="exhaustCodeBasisValue">—</span></div>
+                <div><span class="k">Air Class</span><span class="v" id="exhaustCodeAirClassValue">—</span></div>
+                <div id="exhaustCodeQuantityRow"><span class="k">Quantity</span><span class="v" id="exhaustCodeQuantityValue">—</span></div>
+                <div id="exhaustCodeOperationRow"><span class="k">Operation Mode</span><span class="v" id="exhaustCodeOperationValue">—</span></div>
+                <div><span class="k">Preview Exhaust CFM</span><span class="v" id="exhaustCodePreviewValue">0.00 CFM</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ventilation-running-totals" id="exhaustRunningTotals"></div>
+        <div class="manager-title">Zone Summary Table</div>
+        <div class="ventilation-table-wrap">
+          <table class="ventilation-table exhaust-table">
+            <thead>
+              <tr>
+                <th>Zone Name</th>
+                <th>Category</th>
+                <th class="num">Area (ft²)</th>
+                <th class="num">Quantity</th>
+                <th>Rate</th>
+                <th>Operation Mode</th>
+                <th>Basis</th>
+                <th>Air Class</th>
+                <th class="num">Calculated Exhaust (CFM)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="exhaustZonesBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="module-note">Exhaust values are based on 2025 California Mechanical Code Table 403.7, Minimum Exhaust Rates (ASHRAE 62.1 Table 6-2). Verify local jurisdictional amendments, project-specific requirements, and applicable footnotes before final design use.</div>
       <div class="results-signature">Designed by: Borhan Torkfar</div>
     </div>
 

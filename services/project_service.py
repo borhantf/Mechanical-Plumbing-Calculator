@@ -27,6 +27,9 @@ class ProjectService:
     def normalize_ventilation_payload(self, normalized: dict) -> dict:
         return dict(normalized.get("ventilation", {}))
 
+    def normalize_exhaust_payload(self, normalized: dict) -> dict:
+        return dict(normalized.get("exhaust", {}))
+
     def normalize_wsfu_payload(self, normalized: dict) -> dict:
         return dict(normalized.get("wsfu", {}))
 
@@ -62,6 +65,7 @@ class ProjectService:
             "vent": self.normalize_vent_payload(normalized),
             "gas": self.normalize_gas_payload(normalized),
             "ventilation": self.normalize_ventilation_payload(normalized),
+            "exhaust": self.normalize_exhaust_payload(normalized),
             "wsfu": self.normalize_wsfu_payload(normalized),
             "solar": self.normalize_solar_payload(normalized),
             "refrigerant": self.normalize_refrigerant_payload(normalized),

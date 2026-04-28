@@ -314,7 +314,7 @@ class Api:
                     area["name"] = f"Area {chr(65+idx)}" if idx < 26 else f"Area {idx+1}"
 
         active_module = str(payload.get("activeModule", "home") or "home")
-        if active_module not in ("home", "storm", "condensate", "vent", "ventilation", "gas", "wsfu", "fixtureUnit", "solar", "duct", "ductStatic", "refrigerant"):
+        if active_module not in ("home", "storm", "condensate", "vent", "ventilation", "exhaust", "gas", "wsfu", "fixtureUnit", "solar", "duct", "ductStatic", "refrigerant"):
             active_module = "home"
 
         def _normalize_project_entry(raw_entry):
@@ -605,6 +605,43 @@ class Api:
                         or self._to_non_negative_number(zone.get("providedSupply", 0.0), 0.0) > 0.0
                     ),
                     "notes": str(zone.get("notes", "") or ""),
+                }
+            )
+        exhaust_raw = payload.get("exhaust", {})
+        if not isinstance(exhaust_raw, dict):
+            exhaust_raw = {}
+        exhaust_selection_raw = exhaust_raw.get("selection", {})
+        if not isinstance(exhaust_selection_raw, dict):
+            exhaust_selection_raw = {}
+        exhaust_result_raw = exhaust_raw.get("result", {})
+        if not isinstance(exhaust_result_raw, dict):
+            exhaust_result_raw = {}
+        exhaust_zones_raw = exhaust_selection_raw.get("zones", [])
+        if not isinstance(exhaust_zones_raw, list):
+            exhaust_zones_raw = []
+        normalized_exhaust_zones = []
+        for zidx, zone in enumerate(exhaust_zones_raw):
+            if not isinstance(zone, dict):
+                continue
+            operation_mode = str(zone.get("operationMode", "CONTINUOUS") or "CONTINUOUS").upper()
+            if operation_mode != "INTERMITTENT":
+                operation_mode = "CONTINUOUS"
+            normalized_exhaust_zones.append(
+                {
+                    "id": str(zone.get("id", f"exhaust_zone_{zidx+1}") or f"exhaust_zone_{zidx+1}"),
+                    "zoneName": str(zone.get("zoneName", f"Zone {zidx+1}") or f"Zone {zidx+1}"),
+                    "categoryKey": str(zone.get("categoryKey", "") or ""),
+                    "category": str(zone.get("category", zone.get("categoryName", "")) or ""),
+                    "categoryName": str(zone.get("categoryName", "") or ""),
+                    "area": self._to_non_negative_number(zone.get("area", 0.0), 0.0),
+                    "quantity": self._to_non_negative_number(zone.get("quantity", 0.0), 0.0),
+                    "rateDisplay": str(zone.get("rateDisplay", zone.get("rate", "")) or ""),
+                    "selectedRate": self._to_non_negative_number(zone.get("selectedRate", zone.get("rateValue", 0.0)), 0.0),
+                    "basis": str(zone.get("basis", "") or ""),
+                    "airClass": zone.get("airClass", zone.get("air_class", "")),
+                    "operationMode": operation_mode,
+                    "manualExhaustCfm": self._to_non_negative_number(zone.get("manualExhaustCfm", 0.0), 0.0),
+                    "calculatedExhaust": self._to_non_negative_number(zone.get("calculatedExhaust", zone.get("exhaustCfm", 0.0)), 0.0),
                 }
             )
         gas_raw = payload.get("gas", {})
@@ -1164,6 +1201,18 @@ class Api:
                     "Vot": self._to_non_negative_number(ventilation_result_raw.get("Vot", 0.0), 0.0),
                     "zones": [zone for zone in ventilation_result_raw.get("zones", []) if isinstance(zone, dict)],
                     "warnings": [str(w or "") for w in ventilation_result_raw.get("warnings", []) if str(w or "").strip()],
+                },
+            },
+            "exhaust": {
+                "selection": {
+                    "zones": normalized_exhaust_zones,
+                },
+                "result": {
+                    "section": "exhaust",
+                    "status": str(exhaust_result_raw.get("status", "empty") or "empty"),
+                    "zones": [zone for zone in exhaust_result_raw.get("zones", []) if isinstance(zone, dict)],
+                    "totalExhaust": self._to_non_negative_number(exhaust_result_raw.get("totalExhaust", 0.0), 0.0),
+                    "summary": exhaust_result_raw.get("summary", {}) if isinstance(exhaust_result_raw.get("summary", {}), dict) else {},
                 },
             },
             "gas": {
@@ -2005,6 +2054,8 @@ class Api:
                 section_label = "Sanitary Drainage"
             if section == "ventilation":
                 section_label = "Ventilation Calculator"
+            if section == "exhaust":
+                section_label = "Exhaust Airflow Calculator"
             if section == "refrigerant":
                 section_label = "Refrigerant Compliance"
             if section == "fixtureunit":
@@ -2458,6 +2509,103 @@ class Api:
                         report_sheet.cell(row=rr, column=cc).number_format = "0.00"
 
                 data_rows = max(1, len(zone_rows))
+            elif section == "exhaust":
+                selection = snapshot.get("selection", {})
+                if not isinstance(selection, dict):
+                    selection = {}
+                result = snapshot.get("result", {})
+                if not isinstance(result, dict):
+                    result = {}
+                zones = result.get("zones", selection.get("zones", []))
+                if not isinstance(zones, list):
+                    zones = []
+
+                sheet.title = "Exhaust Airflow"
+                sheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=9)
+                title_cell = sheet.cell(row=1, column=1, value="EXHAUST AIRFLOW CALCULATION")
+                title_cell.font = Font(bold=True, size=13)
+                title_cell.alignment = Alignment(horizontal="center", vertical="center")
+                title_cell.fill = PatternFill(fill_type="solid", fgColor="D8E5F6")
+                sheet.cell(row=2, column=1, value="Section")
+                sheet.cell(row=2, column=2, value=section_label)
+                sheet.cell(row=3, column=1, value="Exported At")
+                sheet.cell(row=3, column=2, value=now_text)
+                row = 5
+                row = self._write_project_header(sheet, row, self._extract_export_project(snapshot))
+                sheet.cell(row=row, column=1, value="Total Exhaust Airflow (CFM)")
+                sheet.cell(row=row, column=2, value=self._to_non_negative_number(result.get("totalExhaust", 0.0), 0.0))
+                sheet.cell(row=row, column=1).font = Font(bold=True)
+                sheet.cell(row=row, column=2).font = Font(bold=True)
+                row += 2
+
+                headers = [
+                    "Zone Name",
+                    "Category",
+                    "Area (ft²)",
+                    "Quantity",
+                    "Rate",
+                    "Operation Mode",
+                    "Basis",
+                    "Air Class",
+                    "Calculated Exhaust (CFM)",
+                ]
+                header_fill = PatternFill(fill_type="solid", fgColor="E7EFFA")
+                thin = Side(style="thin", color="D1D9E6")
+                border = Border(left=thin, right=thin, top=thin, bottom=thin)
+                for i, header in enumerate(headers, start=1):
+                    cell = sheet.cell(row=row, column=i, value=header)
+                    cell.font = Font(bold=True)
+                    cell.fill = header_fill
+                    cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+                    cell.border = border
+                row += 1
+
+                total_exhaust = 0.0
+                for zone in zones:
+                    if not isinstance(zone, dict):
+                        continue
+                    exhaust_val = self._to_non_negative_number(zone.get("calculatedExhaust", zone.get("exhaustCfm", 0.0)), 0.0)
+                    total_exhaust += exhaust_val
+                    basis = str(zone.get("basis", "") or "")
+                    area_value = self._to_non_negative_number(zone.get("area", 0.0), 0.0)
+                    quantity_value = self._to_non_negative_number(zone.get("quantity", 0.0), 0.0)
+                    values = [
+                        str(zone.get("zoneName", zone.get("name", "")) or ""),
+                        str(zone.get("categoryName", zone.get("category", zone.get("categoryKey", ""))) or ""),
+                        area_value if basis == "cfm_per_ft2" else "-",
+                        quantity_value if basis == "fixed_cfm" else "-",
+                        str(zone.get("rateDisplay", zone.get("rate", "")) or ""),
+                        str(zone.get("operationMode", "") or ""),
+                        str(zone.get("basisLabel", zone.get("basis", "")) or ""),
+                        str(zone.get("airClass", "") or ""),
+                        exhaust_val,
+                    ]
+                    for c, value in enumerate(values, start=1):
+                        cell = sheet.cell(row=row, column=c, value=value)
+                        cell.border = border
+                        if c in (3, 4, 8, 9):
+                            cell.alignment = Alignment(horizontal="center", vertical="center")
+                        if c in (3, 4, 9):
+                            cell.number_format = "0.00"
+                    row += 1
+
+                sheet.cell(row=row, column=1, value="TOTAL")
+                sheet.cell(row=row, column=9, value=self._to_non_negative_number(result.get("totalExhaust", total_exhaust), total_exhaust))
+                sheet.cell(row=row, column=1).font = Font(bold=True)
+                sheet.cell(row=row, column=9).font = Font(bold=True)
+                sheet.cell(row=row, column=9).number_format = "0.00"
+                for c in range(1, 10):
+                    sheet.cell(row=row, column=c).border = border
+                row += 2
+                sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=9)
+                note_cell = sheet.cell(row=row, column=1, value="Based on 2025 California Mechanical Code Table 403.7, Minimum Exhaust Rates (ASHRAE 62.1 Table 6-2).")
+                note_cell.font = Font(italic=True, color="5F6F84")
+                note_cell.alignment = Alignment(wrap_text=True)
+                sheet.freeze_panes = "A8"
+                widths = [24, 38, 14, 12, 18, 18, 16, 12, 24]
+                for i, width in enumerate(widths, start=1):
+                    sheet.column_dimensions[sheet.cell(row=1, column=i).column_letter].width = width
+                data_rows = max(1, len(zones))
             elif section == "gas":
                 selection = snapshot.get("selection", {})
                 if not isinstance(selection, dict):

@@ -1,0 +1,20 @@
+Before any new Code:
+
+
+git add .
+
+git commit -m "before <what you are about to do>"
+
+
+
+
+After any new Changes when it is fine:
+
+git add .
+
+git commit -m "added Name data successfully"
+
+
+git push
+
+
