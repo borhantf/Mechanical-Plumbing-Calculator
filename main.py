@@ -11,6 +11,7 @@ from pathlib import Path
 import webview
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from openpyxl.utils import get_column_letter
 from services.export_service import ExportService
 from services.gas_service import GasService
 from services.lookup_service import LookupService
@@ -2521,37 +2522,29 @@ class Api:
                     zones = []
 
                 sheet.title = "Exhaust Airflow"
-                sheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=9)
-                title_cell = sheet.cell(row=1, column=1, value="EXHAUST AIRFLOW CALCULATION")
-                title_cell.font = Font(bold=True, size=13)
-                title_cell.alignment = Alignment(horizontal="center", vertical="center")
-                title_cell.fill = PatternFill(fill_type="solid", fgColor="D8E5F6")
-                sheet.cell(row=2, column=1, value="Section")
-                sheet.cell(row=2, column=2, value=section_label)
+                title_cell = sheet.cell(row=1, column=1, value="EXHAUST CALCULATION")
+                title_cell.font = Font(bold=True, size=16)
+                title_cell.alignment = Alignment(horizontal="left", vertical="center")
+                subtitle_cell = sheet.cell(row=2, column=1, value="(LAMC 403.7)")
+                subtitle_cell.font = Font(bold=True, size=12, color="3F536B")
+                subtitle_cell.alignment = Alignment(horizontal="left", vertical="center")
                 sheet.cell(row=3, column=1, value="Exported At")
                 sheet.cell(row=3, column=2, value=now_text)
                 row = 5
                 row = self._write_project_header(sheet, row, self._extract_export_project(snapshot))
-                sheet.cell(row=row, column=1, value="Total Exhaust Airflow (CFM)")
-                sheet.cell(row=row, column=2, value=self._to_non_negative_number(result.get("totalExhaust", 0.0), 0.0))
-                sheet.cell(row=row, column=1).font = Font(bold=True)
-                sheet.cell(row=row, column=2).font = Font(bold=True)
-                row += 2
+                row += 1
 
                 headers = [
-                    "Zone Name",
-                    "Category",
-                    "Area (ft²)",
-                    "Quantity",
-                    "Rate",
-                    "Operation Mode",
-                    "Basis",
-                    "Air Class",
-                    "Calculated Exhaust (CFM)",
+                    "ROOM NAME",
+                    "FLOOR AREA\n(sqft)",
+                    "EXHAUST AIRFLOW RATE\n(cfm/unit) or (cfm/sqft)",
+                    "REQUIRED EXHAUST\n(cfm)",
+                    "PROVIDED EXHAUST\n(cfm)",
                 ]
                 header_fill = PatternFill(fill_type="solid", fgColor="E7EFFA")
                 thin = Side(style="thin", color="D1D9E6")
                 border = Border(left=thin, right=thin, top=thin, bottom=thin)
+                header_row = row
                 for i, header in enumerate(headers, start=1):
                     cell = sheet.cell(row=row, column=i, value=header)
                     cell.font = Font(bold=True)
@@ -2564,47 +2557,62 @@ class Api:
                 for zone in zones:
                     if not isinstance(zone, dict):
                         continue
-                    exhaust_val = self._to_non_negative_number(zone.get("calculatedExhaust", zone.get("exhaustCfm", 0.0)), 0.0)
-                    total_exhaust += exhaust_val
                     basis = str(zone.get("basis", "") or "")
+                    selected_rate = self._to_non_negative_number(zone.get("selectedRate", zone.get("rateValue", 0.0)), 0.0)
                     area_value = self._to_non_negative_number(zone.get("area", 0.0), 0.0)
                     quantity_value = self._to_non_negative_number(zone.get("quantity", 0.0), 0.0)
+                    manual_exhaust = self._to_non_negative_number(zone.get("manualExhaustCfm", zone.get("calculatedExhaust", zone.get("exhaustCfm", 0.0))), 0.0)
+                    if basis == "fixed_cfm":
+                        exhaust_val = selected_rate * quantity_value
+                        rate_value = selected_rate
+                        area_cell_value = "-"
+                    elif basis == "cfm_per_ft2":
+                        exhaust_val = selected_rate * area_value
+                        rate_value = selected_rate
+                        area_cell_value = area_value
+                    elif basis == "manual_required":
+                        exhaust_val = manual_exhaust
+                        rate_value = "Manual"
+                        area_cell_value = area_value if area_value > 0 else "-"
+                    else:
+                        exhaust_val = self._to_non_negative_number(zone.get("calculatedExhaust", zone.get("exhaustCfm", 0.0)), 0.0)
+                        rate_value = zone.get("rateDisplay", zone.get("rate", ""))
+                        area_cell_value = area_value if area_value > 0 else "-"
+                    total_exhaust += exhaust_val
                     values = [
                         str(zone.get("zoneName", zone.get("name", "")) or ""),
-                        str(zone.get("categoryName", zone.get("category", zone.get("categoryKey", ""))) or ""),
-                        area_value if basis == "cfm_per_ft2" else "-",
-                        quantity_value if basis == "fixed_cfm" else "-",
-                        str(zone.get("rateDisplay", zone.get("rate", "")) or ""),
-                        str(zone.get("operationMode", "") or ""),
-                        str(zone.get("basisLabel", zone.get("basis", "")) or ""),
-                        str(zone.get("airClass", "") or ""),
+                        area_cell_value,
+                        rate_value,
+                        exhaust_val,
                         exhaust_val,
                     ]
                     for c, value in enumerate(values, start=1):
                         cell = sheet.cell(row=row, column=c, value=value)
                         cell.border = border
-                        if c in (3, 4, 8, 9):
-                            cell.alignment = Alignment(horizontal="center", vertical="center")
-                        if c in (3, 4, 9):
+                        cell.alignment = Alignment(horizontal="left" if c == 1 else "center", vertical="center", wrap_text=True)
+                        if c in (2, 3, 4, 5) and isinstance(value, (int, float)):
                             cell.number_format = "0.00"
                     row += 1
 
                 sheet.cell(row=row, column=1, value="TOTAL")
-                sheet.cell(row=row, column=9, value=self._to_non_negative_number(result.get("totalExhaust", total_exhaust), total_exhaust))
+                sheet.cell(row=row, column=4, value=total_exhaust)
+                sheet.cell(row=row, column=5, value=total_exhaust)
                 sheet.cell(row=row, column=1).font = Font(bold=True)
-                sheet.cell(row=row, column=9).font = Font(bold=True)
-                sheet.cell(row=row, column=9).number_format = "0.00"
-                for c in range(1, 10):
+                sheet.cell(row=row, column=4).font = Font(bold=True)
+                sheet.cell(row=row, column=5).font = Font(bold=True)
+                sheet.cell(row=row, column=4).number_format = "0.00"
+                sheet.cell(row=row, column=5).number_format = "0.00"
+                for c in range(1, 6):
                     sheet.cell(row=row, column=c).border = border
                 row += 2
-                sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=9)
-                note_cell = sheet.cell(row=row, column=1, value="Based on 2025 California Mechanical Code Table 403.7, Minimum Exhaust Rates (ASHRAE 62.1 Table 6-2).")
+                note_cell = sheet.cell(row=row, column=1, value="Based on 2025 California Mechanical Code Table 403.7, Minimum Exhaust Rates (ASHRAE 62.1 Table 6-2). Verify local jurisdictional amendments before final design.")
                 note_cell.font = Font(italic=True, color="5F6F84")
                 note_cell.alignment = Alignment(wrap_text=True)
-                sheet.freeze_panes = "A8"
-                widths = [24, 38, 14, 12, 18, 18, 16, 12, 24]
+                sheet.freeze_panes = f"A{header_row + 1}"
+                widths = [30, 16, 28, 20, 20]
                 for i, width in enumerate(widths, start=1):
-                    sheet.column_dimensions[sheet.cell(row=1, column=i).column_letter].width = width
+                    sheet.column_dimensions[get_column_letter(i)].width = width
+                sheet.row_dimensions[header_row].height = 38
                 data_rows = max(1, len(zones))
             elif section == "gas":
                 selection = snapshot.get("selection", {})
