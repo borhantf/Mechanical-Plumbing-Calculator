@@ -8570,6 +8570,44 @@ var pipeData = {
       renderExhaustZonesTable();
     }
 
+    function getUniqueExhaustCopyName(baseName) {
+      var root = String(baseName || 'Zone').trim() || 'Zone';
+      var firstCopy = root + ' - Copy';
+      var existing = {};
+      for (var i = 0; i < exhaustZones.length; i++) {
+        existing[String(exhaustZones[i].zoneName || '').trim().toLowerCase()] = true;
+      }
+      if (!existing[firstCopy.toLowerCase()]) return firstCopy;
+      var copyIndex = 2;
+      while (existing[(firstCopy + ' ' + copyIndex).toLowerCase()]) copyIndex += 1;
+      return firstCopy + ' ' + copyIndex;
+    }
+
+    function duplicateExhaustZone(zoneId) {
+      ensureExhaustInitialized();
+      var source = null;
+      for (var i = 0; i < exhaustZones.length; i++) if (exhaustZones[i].id === zoneId) source = exhaustZones[i];
+      if (!source) return;
+      var duplicate = {
+        id: makeExhaustZoneId(),
+        zoneName: getUniqueExhaustCopyName(source.zoneName),
+        categoryKey: source.categoryKey || '',
+        category: source.category || source.categoryName || '',
+        area: parseNonNegativeNumber(source.area, 0),
+        quantity: parseNonNegativeNumber(source.quantity, 0),
+        rateDisplay: source.rateDisplay || source.rate || '',
+        selectedRate: parseNonNegativeNumber(source.selectedRate || source.rateValue, 0),
+        basis: source.basis || '',
+        airClass: source.airClass || source.air_class || '',
+        operationMode: source.operationMode === 'INTERMITTENT' ? 'INTERMITTENT' : 'CONTINUOUS',
+        manualExhaustCfm: parseNonNegativeNumber(source.manualExhaustCfm, 0),
+        calculatedExhaust: parseNonNegativeNumber(source.calculatedExhaust || source.exhaustCfm, 0)
+      };
+      exhaustZones.push(duplicate);
+      renderExhaustZonesTable();
+      calculateExhaust(true);
+    }
+
     function deleteExhaustZone(zoneId) {
       exhaustZones = exhaustZones.filter(function (zone) { return zone.id !== zoneId; });
       if (exhaustEditingZoneId === zoneId) exhaustEditingZoneId = '';
@@ -8673,7 +8711,7 @@ var pipeData = {
         html += '<td>' + htmlSafe(row.basisLabel) + '</td>';
         html += '<td>' + renderExhaustAirClassPill(row.airClass) + '</td>';
         html += '<td class="num">' + formatNumber(row.exhaustCfm, 2) + '</td>';
-        html += '<td><input type="button" class="btn cond-secondary-btn vent-row-action" value="Edit" onclick="editExhaustZone(\'' + row.id + '\');" /> <input type="button" class="btn btn-small zone-danger-btn vent-row-action" value="Delete" onclick="deleteExhaustZone(\'' + row.id + '\');" /></td>';
+        html += '<td><input type="button" class="btn cond-secondary-btn vent-row-action" value="Duplicate" onclick="duplicateExhaustZone(\'' + row.id + '\');" /> <input type="button" class="btn cond-secondary-btn vent-row-action" value="Edit" onclick="editExhaustZone(\'' + row.id + '\');" /> <input type="button" class="btn btn-small zone-danger-btn vent-row-action" value="Delete" onclick="deleteExhaustZone(\'' + row.id + '\');" /></td>';
         html += '</tr>';
       }
       body.innerHTML = html;
